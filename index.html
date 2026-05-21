@@ -32,23 +32,34 @@
     <div class="preloader__leak" aria-hidden="true"></div>
     <div class="preloader__leak preloader__leak--alt" aria-hidden="true"></div>
 
-    <svg class="preloader__iris" viewBox="-100 -100 200 200" aria-hidden="true">
+    <!-- D-mark (echoes the logo): outline draws, orange dot scales in -->
+    <svg class="preloader__mark" viewBox="-100 -100 200 200" aria-hidden="true">
       <defs>
-        <radialGradient id="irisGlow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#fb7f40" stop-opacity="0.55" />
+        <radialGradient id="dotGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"  stop-color="#fb7f40" stop-opacity="0.65" />
           <stop offset="60%" stop-color="#fb7f40" stop-opacity="0" />
         </radialGradient>
       </defs>
-      <circle class="iris__glow" r="120" fill="url(#irisGlow)" />
-      <g class="iris__blades">
-        <polygon class="blade" points="0,0 120,-60 120,60" />
-        <polygon class="blade" points="0,0 120,-60 120,60" />
-        <polygon class="blade" points="0,0 120,-60 120,60" />
-        <polygon class="blade" points="0,0 120,-60 120,60" />
-        <polygon class="blade" points="0,0 120,-60 120,60" />
-        <polygon class="blade" points="0,0 120,-60 120,60" />
-        <polygon class="blade" points="0,0 120,-60 120,60" />
-        <polygon class="blade" points="0,0 120,-60 120,60" />
+      <!-- Soft glow halo behind the dot -->
+      <circle id="preloader-d-halo" cx="-22" cy="36" r="60" fill="url(#dotGlow)" />
+      <!-- The D outline: straight left spine, curved right bowl -->
+      <path id="preloader-d-path"
+            d="M -64 -78 L -64 78 L -4 78 Q 64 78 64 0 Q 64 -78 -4 -78 Z"
+            fill="none"
+            stroke="#ffffff"
+            stroke-width="6"
+            stroke-linejoin="round"
+            stroke-linecap="round" />
+      <!-- Orange dot inside the bowl (lower-left of the D's interior) -->
+      <circle id="preloader-d-dot" cx="-22" cy="36" r="22" fill="#fb7f40" />
+      <!-- Registered ® mark at the top-right corner of the D -->
+      <g id="preloader-d-reg" transform="translate(72, -82)">
+        <circle r="10" fill="none" stroke="#fb7f40" stroke-width="2" />
+        <text x="0" y="3.5" text-anchor="middle"
+              font-family="IBM Plex Mono, monospace"
+              font-size="11"
+              font-weight="500"
+              fill="#fb7f40">R</text>
       </g>
     </svg>
 
@@ -64,21 +75,13 @@
     <div class="preloader__signature">
       <span>Daya Studios</span>
       <span class="dim">·</span>
-      <span>MMXXV Exhibition</span>
+      <span>Photography Studio</span>
     </div>
   </div>
 
   <!-- ────────────────────────────────────────────────────────────────
-       PERSISTENT UI  ·  Cursor / grain / lens flare / dust
+       PERSISTENT UI  ·  grain / dust
        ──────────────────────────────────────────────────────────────── -->
-  <div class="cursor" id="cursor" aria-hidden="true">
-    <div class="cursor__ring"></div>
-    <div class="cursor__dot"></div>
-    <div class="cursor__label" id="cursor-label"></div>
-  </div>
-
-  <div class="flare" id="flare" aria-hidden="true"></div>
-
   <canvas class="dust" id="dust" aria-hidden="true"></canvas>
 
   <svg class="grain" aria-hidden="true">
@@ -120,50 +123,118 @@
 
     <!-- HERO BANNER ────────────────────────────────────────────── -->
     <section class="hero" data-scroll-section data-plate="00">
-      <figure class="hero__banner">
-        <img
-          class="hero__img"
-          src="assets/img/plates/00-hero.jpg"
-          onerror="this.onerror=null;this.src='https://cdn.myportfolio.com/f4536420-5f83-4a91-a9dd-0ebca5a68191/bf9a2dfc-5cf6-4596-85bd-cf8f9a2fbd7d_rwc_15x0x1749x656x4096.jpg?h=5537973e774b3153d34ee584ea8d4463';"
-          alt="Daya Studios — opening plate"
-          fetchpriority="high"
-        />
-        <div class="hero__scrim"></div>
-        <div class="hero__banner-meta">
-          <span class="hero__banner-tag">DAYA STUDIOS &nbsp;·&nbsp; PHOTOGRAPHY &nbsp;·&nbsp; MMXXV</span>
+      <!-- Multi-slide reel · auto-rotates with Ken Burns zoom + crossfade -->
+      <div class="hero__reel" id="hero-reel" aria-hidden="true">
+        <div class="reel__slide is-active" data-cat="Lifestyle">
+          <img src="assets/img/plates/01-lifestyle.jpg"
+               onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1490723286627-4b66e6b2882a?w=2400&amp;q=85&amp;auto=format&amp;fit=crop';"
+               alt="" fetchpriority="high" />
         </div>
-      </figure>
-
-      <div class="hero__copy">
-        <div class="hero__eyebrow">
-          <span class="dot"></span>
-          <span>An exhibition by Daya Studios &nbsp;·&nbsp; Nine plates</span>
+        <div class="reel__slide" data-cat="Products">
+          <img src="assets/img/plates/03-products.jpg"
+               onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=2400&amp;q=85&amp;auto=format&amp;fit=crop';"
+               alt="" loading="lazy" />
         </div>
-
-        <h1 class="hero__title" aria-label="The light, the lens, the story.">
-          <span class="line"><span class="line__inner">The light,</span></span>
-          <span class="line"><span class="line__inner"><em>the lens,</em></span></span>
-          <span class="line"><span class="line__inner">the story.</span></span>
-        </h1>
-
-        <p class="hero__lede">
-          Photography across lifestyle, hospitality, automotive and commercial — composed with intention,
-          finished by hand. Move through the rooms.
-        </p>
-
-        <div class="hero__cta-row">
-          <button class="cta" data-scroll-to="#plate-01">
-            <span class="cta__bg"></span>
-            <span class="cta__label">Enter the gallery</span>
-            <svg class="cta__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.25" fill="none" stroke-linecap="square" stroke-linejoin="miter"/></svg>
-          </button>
-          <a class="cta cta--ghost" href="#contact">Book a shoot</a>
+        <div class="reel__slide" data-cat="Food &amp; Drink">
+          <img src="assets/img/plates/06-food.jpg"
+               onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=2400&amp;q=85&amp;auto=format&amp;fit=crop';"
+               alt="" loading="lazy" />
         </div>
+        <div class="reel__slide" data-cat="Hospitality">
+          <img src="assets/img/plates/07-hospitality.jpg"
+               onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=2400&amp;q=85&amp;auto=format&amp;fit=crop';"
+               alt="" loading="lazy" />
+        </div>
+        <div class="reel__slide" data-cat="Automotive">
+          <img src="assets/img/plates/04-automotive.jpg"
+               onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=2400&amp;q=85&amp;auto=format&amp;fit=crop';"
+               alt="" loading="lazy" />
+        </div>
+      </div>
+
+      <!-- Diagonal scrim from left so the headline stays readable on any image -->
+      <div class="hero__scrim" aria-hidden="true"></div>
+
+      <!-- Foreground text -->
+      <div class="hero__overlay">
+        <div class="hero__overlay-inner">
+          <div class="hero__eyebrow">
+            <span class="dot"></span>
+            <span>Daya Studios &nbsp;·&nbsp; Now showing: <span data-current-cat>Lifestyle</span></span>
+          </div>
+
+          <h1 class="hero__title" aria-label="The light, the lens, the story.">
+            <span class="line"><span class="line__inner">The light,</span></span>
+            <span class="line"><span class="line__inner"><em>the lens,</em></span></span>
+            <span class="line"><span class="line__inner">the story.</span></span>
+          </h1>
+
+          <p class="hero__lede">
+            Photography across lifestyle, hospitality, automotive and commercial — composed with intention,
+            finished by hand. Move through the rooms.
+          </p>
+
+          <div class="hero__cta-row">
+            <button class="cta" data-scroll-to="#plate-01">
+              <span class="cta__bg"></span>
+              <span class="cta__label">Enter the gallery</span>
+              <svg class="cta__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.25" fill="none" stroke-linecap="square" stroke-linejoin="miter"/></svg>
+            </button>
+            <a class="cta cta--ghost cta--ghost-light" href="#contact">Book a shoot</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide counter + progress bar -->
+      <div class="hero__reel-meta" aria-hidden="true">
+        <span class="reel__counter">
+          <span data-current-slide>01</span><span class="dim">/</span><span data-total-slides>05</span>
+        </span>
+        <div class="reel__progress"><i id="reel-progress"></i></div>
       </div>
 
       <div class="hero__scroll-hint">
         <span>Scroll</span>
         <div class="scroll-hint__line"><i></i></div>
+      </div>
+    </section>
+
+    <!-- CLIENTS / SELECTED PARTNERS ──────────────────────────────────
+         Logo wall. Placeholders are styled boxes — drop real client
+         logos into assets/img/clients/ named client-01.png through
+         client-12.png and they'll swap in automatically.
+         ────────────────────────────────────────────────────────────── -->
+    <section class="clients" id="clients" data-scroll-section>
+      <div class="clients__inner">
+        <div class="clients__head">
+          <div class="clients__eyebrow">
+            <span class="dot"></span>
+            <span>Selected partners</span>
+          </div>
+          <h2 class="clients__title">
+            <span class="line"><span class="line__inner">In good</span></span>
+            <span class="line"><span class="line__inner"><em>company.</em></span></span>
+          </h2>
+          <p class="clients__lede">
+            A decade of collaboration with houses, hotels, manufacturers and editorial titles
+            who let the work speak.
+          </p>
+        </div>
+
+        <ul class="clients__grid" aria-label="Client logos">
+          <li class="client"><span class="client__placeholder">CLIENT 01</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 02</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 03</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 04</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 05</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 06</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 07</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 08</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 09</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 10</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 11</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 12</span></li>
+        </ul>
       </div>
     </section>
 
@@ -313,45 +384,6 @@
       </div>
     </section>
 
-    <!-- CLIENTS ─────────────────────────────────────────────────────
-         Logo wall. Placeholders below are styled boxes — drop real
-         client logos into assets/img/clients/ named client-01.png
-         through client-12.png and the JS will swap them in.
-         ────────────────────────────────────────────────────────────── -->
-    <section class="clients" id="clients" data-scroll-section>
-      <div class="clients__inner">
-        <div class="clients__head">
-          <div class="clients__eyebrow">
-            <span class="dot"></span>
-            <span>Selected partners</span>
-          </div>
-          <h2 class="clients__title">
-            <span class="line"><span class="line__inner">In good</span></span>
-            <span class="line"><span class="line__inner"><em>company.</em></span></span>
-          </h2>
-          <p class="clients__lede">
-            A decade of collaboration with houses, hotels, manufacturers and editorial titles
-            who let the work speak.
-          </p>
-        </div>
-
-        <ul class="clients__grid" aria-label="Client logos">
-          <li class="client"><span class="client__placeholder">CLIENT 01</span></li>
-          <li class="client"><span class="client__placeholder">CLIENT 02</span></li>
-          <li class="client"><span class="client__placeholder">CLIENT 03</span></li>
-          <li class="client"><span class="client__placeholder">CLIENT 04</span></li>
-          <li class="client"><span class="client__placeholder">CLIENT 05</span></li>
-          <li class="client"><span class="client__placeholder">CLIENT 06</span></li>
-          <li class="client"><span class="client__placeholder">CLIENT 07</span></li>
-          <li class="client"><span class="client__placeholder">CLIENT 08</span></li>
-          <li class="client"><span class="client__placeholder">CLIENT 09</span></li>
-          <li class="client"><span class="client__placeholder">CLIENT 10</span></li>
-          <li class="client"><span class="client__placeholder">CLIENT 11</span></li>
-          <li class="client"><span class="client__placeholder">CLIENT 12</span></li>
-        </ul>
-      </div>
-    </section>
-
     <!-- COLOPHON / CONTACT + BOOKING FORM ───────────────────────── -->
     <section class="colophon" id="contact" data-scroll-section>
       <div class="colophon__inner">
@@ -376,7 +408,7 @@
               </div>
               <div>
                 <span class="colophon__label">Studio</span>
-                <p>Beirut · Milan · on assignment worldwide</p>
+                <p>Lebanon · KSA · on assignment worldwide</p>
               </div>
               <div>
                 <span class="colophon__label">Index</span>
@@ -431,10 +463,39 @@
             </div>
 
             <div class="booking__row">
+              <div class="field">
+                <span class="field__label">Duration</span>
+                <div class="slot-group slot-group--duration" role="radiogroup" aria-label="Shoot duration">
+                  <label class="slot">
+                    <input type="radio" name="duration" value="Full day (8 hours)" />
+                    <span class="slot__pill">
+                      <span class="slot__name">Full day</span>
+                      <span class="slot__time">8 hours</span>
+                    </span>
+                  </label>
+                  <label class="slot">
+                    <input type="radio" name="duration" value="Half day (4 hours)" />
+                    <span class="slot__pill">
+                      <span class="slot__name">Half day</span>
+                      <span class="slot__time">4 hours</span>
+                    </span>
+                  </label>
+                  <label class="slot">
+                    <input type="radio" name="duration" value="Custom (specify in message)" />
+                    <span class="slot__pill">
+                      <span class="slot__name">Custom</span>
+                      <span class="slot__time">see brief</span>
+                    </span>
+                  </label>
+                </div>
+              </div>
               <label class="field">
                 <span class="field__label">Preferred date</span>
                 <input class="field__input" type="date" name="date" />
               </label>
+            </div>
+
+            <div class="booking__row booking__row--slot">
               <div class="field">
                 <span class="field__label">Time slot</span>
                 <div class="slot-group" role="radiogroup" aria-label="Preferred time slot">
@@ -457,6 +518,13 @@
                     <span class="slot__pill">
                       <span class="slot__name">Evening</span>
                       <span class="slot__time">5 – 8</span>
+                    </span>
+                  </label>
+                  <label class="slot">
+                    <input type="radio" name="slot" value="Flexible / Other" />
+                    <span class="slot__pill">
+                      <span class="slot__name">Flexible</span>
+                      <span class="slot__time">other</span>
                     </span>
                   </label>
                 </div>
@@ -482,7 +550,7 @@
         </div>
 
         <div class="colophon__signature">
-          <span>© Daya Studios MMXXV</span>
+          <span>© Daya Studios</span>
           <span class="dim">·</span>
           <span>All works exhibited are the property of the studio.</span>
           <span class="colophon__credit">
