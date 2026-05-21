@@ -109,19 +109,23 @@
       if (timerId) { clearInterval(timerId); timerId = null; }
     }
 
-    // Chip interactions: hover previews, click jumps to plate
+    const hasHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    // Chip interactions: hover previews (desktop only), click jumps to plate
     chips.forEach((chip, k) => {
-      chip.addEventListener('mouseenter', () => {
-        paused = true;
-        stopTimer();
-        setSlide(k);
-      });
-      chip.addEventListener('mouseleave', () => {
-        paused = false;
-        startTimer();
-      });
-      chip.addEventListener('focus', () => { paused = true; stopTimer(); setSlide(k); });
-      chip.addEventListener('blur',  () => { paused = false; startTimer(); });
+      if (hasHover) {
+        chip.addEventListener('mouseenter', () => {
+          paused = true;
+          stopTimer();
+          setSlide(k);
+        });
+        chip.addEventListener('mouseleave', () => {
+          paused = false;
+          startTimer();
+        });
+        chip.addEventListener('focus', () => { paused = true; stopTimer(); setSlide(k); });
+        chip.addEventListener('blur',  () => { paused = false; startTimer(); });
+      }
       chip.addEventListener('click', (e) => {
         e.preventDefault();
         const target = chip.getAttribute('data-cat-link');

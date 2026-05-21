@@ -50,7 +50,7 @@
   if (trackedImgs.length === 0) imagesReady = true;
 
   // ─── Run the sequence ───
-  const TOTAL = 3400; // ms of visible animation
+  const TOTAL = 5400; // ms — paced to match the develop + heartbeat animation
   const start = performance.now();
 
   function tick(now) {
