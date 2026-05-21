@@ -59,17 +59,14 @@ html {
 body {
   background: var(--paper);
   overflow-x: hidden;
-  cursor: none;
+  
 }
 
-@media (pointer: coarse) {
-  body { cursor: auto; }
-  .cursor, .flare { display: none !important; }
-}
+
 
 img { display: block; max-width: 100%; height: auto; }
-button { background: none; border: 0; color: inherit; font: inherit; cursor: none; }
-a { color: inherit; text-decoration: none; cursor: none; }
+button { background: none; border: 0; color: inherit; font: inherit;  }
+a { color: inherit; text-decoration: none;  }
 
 ::selection { background: var(--brand-orange); color: var(--paper); }
 
@@ -112,74 +109,6 @@ a { color: inherit; text-decoration: none; cursor: none; }
   mix-blend-mode: multiply;
   opacity: 0.45;
 }
-
-/* ── 04 · Custom cursor + lens flare ────────────────────────────── */
-.cursor {
-  position: fixed;
-  top: 0; left: 0;
-  width: 40px; height: 40px;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 1000;
-  will-change: transform;
-}
-.cursor__ring {
-  position: absolute; inset: 0;
-  border: 1px solid var(--brand-blue);
-  border-radius: 50%;
-  transition: transform 0.35s var(--ease-out-expo),
-              border-color 0.3s,
-              opacity 0.3s;
-}
-.cursor__dot {
-  position: absolute; left: 50%; top: 50%;
-  width: 4px; height: 4px;
-  background: var(--brand-orange);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-}
-.cursor__label {
-  position: absolute; top: 50%; left: 100%;
-  transform: translate(12px, -50%);
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: var(--brand-blue);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-/* States triggered by JS */
-.cursor.is-hover .cursor__ring { transform: scale(2.2); border-color: var(--brand-orange); }
-.cursor.is-hover .cursor__dot  { opacity: 0; }
-.cursor.is-label .cursor__label { opacity: 1; }
-.cursor.is-press .cursor__ring { transform: scale(0.75); }
-
-/* THE WOW FEATURE — orange lens flare following the cursor.
-   Multiply blend on white so it visibly warms paper surfaces;
-   on dark photographic content it desaturates beautifully. */
-.flare {
-  position: fixed;
-  top: 0; left: 0;
-  width: 540px; height: 540px;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 60;
-  background:
-    radial-gradient(circle at 50% 50%,
-      rgba(251, 127, 64, 0.42) 0%,
-      rgba(251, 127, 64, 0.22) 16%,
-      rgba(251, 127, 64, 0.08) 36%,
-      rgba(251, 127, 64, 0) 60%);
-  mix-blend-mode: multiply;
-  filter: blur(10px);
-  opacity: 0;
-  transition: opacity 0.5s var(--ease-out-expo);
-  will-change: transform, opacity;
-}
-.flare.is-on { opacity: 1; }
 
 /* ── 05 · Preloader · "The gallery opens" ───────────────────────── */
 .preloader {
@@ -229,27 +158,37 @@ a { color: inherit; text-decoration: none; cursor: none; }
   100% { opacity: 0; transform: translate(10%, -50%) rotate(-22deg); }
 }
 
-/* Aperture iris on navy */
-.preloader__iris {
+/* D-mark on navy — logo silhouette draws itself */
+.preloader__mark {
   position: relative;
   width: clamp(140px, 18vw, 240px);
   aspect-ratio: 1;
   z-index: 2;
+  overflow: visible;
 }
-.iris__glow {
+#preloader-d-path {
+  /* JS sets stroke-dasharray + stroke-dashoffset on boot */
+  transition: stroke-dashoffset 0.12s linear;
+}
+#preloader-d-dot {
+  transform-origin: -22px 36px;
+  transform-box: fill-box;
+  transform: scale(0.4);
   opacity: 0;
-  animation: irisGlow 4s ease-out 0.4s forwards;
+  transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
 }
-@keyframes irisGlow {
-  0%, 100% { opacity: 0; }
-  40%, 70% { opacity: 1; }
+#preloader-d-halo {
+  opacity: 0;
+  animation: dotHalo 3s ease-out 1.8s forwards;
 }
-.iris__blades { transform-origin: 0 0; }
-.blade {
-  fill: var(--brand-blue-deep);
-  stroke: rgba(255, 255, 255, 0.45);
-  stroke-width: 0.5;
-  transform-origin: 0 0;
+@keyframes dotHalo {
+  0%   { opacity: 0; }
+  40%  { opacity: 1; }
+  100% { opacity: 0.55; }
+}
+#preloader-d-reg {
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-out-expo);
 }
 
 /* Catalog meta under iris */
@@ -403,75 +342,72 @@ a { color: inherit; text-decoration: none; cursor: none; }
   .brand__logo { height: 30px; }
 }
 
-/* ── 07 · Hero banner ───────────────────────────────────────────── */
+/* ── 07 · Hero · auto-rotating slideshow reel ───────────────────── */
 .hero {
   position: relative;
-  display: flex;
-  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--brand-blue-deep);
 }
 
-/* Wide banner image at top — uses the actual Daya Studios banner */
-.hero__banner {
-  position: relative;
-  width: 100%;
-  height: clamp(420px, 72vh, 820px);
-  overflow: hidden;
-  background: var(--brand-blue-soft);
+/* The reel — multiple slides stacked, crossfade between them */
+.hero__reel {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }
-.hero__img {
+.reel__slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.4s var(--ease-out-expo);
+}
+.reel__slide.is-active {
+  opacity: 1;
+}
+.reel__slide img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1.06);
-  transition: transform 1.6s var(--ease-out-expo);
+  transform: scale(1.02);
+  transition: transform 8s linear;
 }
-.hero.is-revealed .hero__img { transform: scale(1); }
+/* Ken Burns drift only on the active slide */
+.reel__slide.is-active img {
+  transform: scale(1.14);
+}
 
-/* Subtle scrim from bottom-left for the small banner tag's legibility */
+/* Diagonal scrim from the left so the title stays readable on any image */
 .hero__scrim {
   position: absolute;
   inset: 0;
+  z-index: 1;
   background:
-    linear-gradient(135deg,
-      transparent 0%,
-      transparent 55%,
-      rgba(0, 31, 82, 0.32) 100%),
+    linear-gradient(90deg,
+      rgba(0, 31, 82, 0.88) 0%,
+      rgba(0, 31, 82, 0.62) 32%,
+      rgba(0, 31, 82, 0.22) 64%,
+      rgba(0, 31, 82, 0) 92%),
     linear-gradient(180deg,
-      transparent 65%,
-      rgba(0, 31, 82, 0.28) 100%);
+      rgba(0, 31, 82, 0) 60%,
+      rgba(0, 31, 82, 0.45) 100%);
   pointer-events: none;
 }
 
-.hero__banner-meta {
-  position: absolute;
-  left: var(--gutter);
-  bottom: clamp(20px, 3vh, 32px);
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.hero__banner-tag {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.92);
-  padding: 8px 14px;
-  background: rgba(0, 31, 82, 0.5);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 999px;
-}
-
-/* Copy block lives below the banner in white gallery space */
-.hero__copy {
+/* Foreground content sits over the scrim */
+.hero__overlay {
   position: relative;
-  padding: clamp(56px, 9vh, 120px) var(--gutter) clamp(72px, 10vh, 140px);
-  max-width: 1280px;
-  width: 100%;
-  margin: 0 auto;
+  z-index: 2;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  align-items: center;
+  padding: clamp(120px, 18vh, 200px) var(--gutter) clamp(140px, 16vh, 200px);
+}
+.hero__overlay-inner {
+  max-width: 760px;
 }
 
 .hero__eyebrow {
@@ -483,14 +419,20 @@ a { color: inherit; text-decoration: none; cursor: none; }
   font-size: 11px;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--ink-soft);
+  color: rgba(255, 255, 255, 0.86);
 }
+.hero__eyebrow [data-current-cat] {
+  color: var(--brand-orange);
+  font-weight: 500;
+  transition: color 0.4s ease;
+}
+
 .dot {
   display: inline-block;
   width: 8px; height: 8px;
   border-radius: 50%;
   background: var(--brand-orange);
-  box-shadow: 0 0 0 4px rgba(251, 127, 64, 0.14);
+  box-shadow: 0 0 0 4px rgba(251, 127, 64, 0.22);
 }
 
 .hero__title {
@@ -499,9 +441,10 @@ a { color: inherit; text-decoration: none; cursor: none; }
   font-size: clamp(56px, 9vw, 168px);
   line-height: 0.92;
   letter-spacing: -0.04em;
-  color: var(--brand-blue);
+  color: var(--paper);
   margin-bottom: clamp(28px, 4vh, 48px);
   max-width: 12ch;
+  text-shadow: 0 4px 40px rgba(0, 31, 82, 0.3);
 }
 .hero__title em {
   font-style: italic;
@@ -509,7 +452,7 @@ a { color: inherit; text-decoration: none; cursor: none; }
   font-weight: 200;
 }
 
-/* Mask-reveal */
+/* Mask-reveal lines */
 .line { display: block; overflow: hidden; padding-bottom: 0.04em; }
 .line__inner {
   display: block;
@@ -529,7 +472,7 @@ a { color: inherit; text-decoration: none; cursor: none; }
   max-width: 560px;
   font-size: clamp(15px, 1.15vw, 18px);
   line-height: 1.55;
-  color: var(--ink-soft);
+  color: rgba(255, 255, 255, 0.86);
   margin-bottom: clamp(32px, 5vh, 56px);
   font-weight: 350;
 }
@@ -555,7 +498,6 @@ a { color: inherit; text-decoration: none; cursor: none; }
   isolation: isolate;
   overflow: hidden;
   border-radius: 999px;
-  cursor: none;
 }
 .cta__bg {
   position: absolute; inset: 0;
@@ -582,11 +524,60 @@ a { color: inherit; text-decoration: none; cursor: none; }
   border-color: var(--brand-orange);
   background: var(--brand-orange-soft);
 }
+/* Light variant of ghost CTA for use over photo backgrounds */
+.cta--ghost-light {
+  color: var(--paper);
+  border-color: rgba(255, 255, 255, 0.42);
+}
+.cta--ghost-light:hover {
+  color: var(--brand-orange);
+  border-color: var(--brand-orange);
+  background: rgba(251, 127, 64, 0.12);
+}
+
+/* Slide counter + progress indicator (bottom-right of hero) */
+.hero__reel-meta {
+  position: absolute;
+  right: var(--gutter);
+  bottom: clamp(28px, 4vh, 48px);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--paper);
+}
+.reel__counter {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.92);
+}
+.reel__counter .dim { opacity: 0.4; margin: 0 2px; }
+.reel__progress {
+  width: 100px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.22);
+  position: relative;
+  overflow: hidden;
+}
+.reel__progress i {
+  position: absolute;
+  inset: 0;
+  background: var(--brand-orange);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+.reel__progress i.is-running {
+  transform: scaleX(1);
+  transition: transform 5.4s linear;
+}
 
 .hero__scroll-hint {
   position: absolute;
-  right: var(--gutter);
-  bottom: clamp(20px, 3vh, 32px);
+  left: var(--gutter);
+  bottom: clamp(28px, 4vh, 48px);
+  z-index: 3;
   display: flex;
   align-items: center;
   gap: 14px;
@@ -594,12 +585,11 @@ a { color: inherit; text-decoration: none; cursor: none; }
   font-size: 10px;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.85);
-  z-index: 2;
+  color: rgba(255, 255, 255, 0.78);
 }
 .scroll-hint__line {
   width: 60px; height: 1px;
-  background: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.28);
   position: relative;
   overflow: hidden;
 }
@@ -617,10 +607,15 @@ a { color: inherit; text-decoration: none; cursor: none; }
 }
 
 @media (max-width: 768px) {
-  .hero__banner { height: 52vh; min-height: 380px; }
-  .hero__banner-tag { font-size: 9px; padding: 6px 12px; letter-spacing: 0.24em; }
+  .hero__overlay {
+    padding-top: clamp(96px, 14vh, 140px);
+    padding-bottom: clamp(120px, 14vh, 160px);
+  }
+  .hero__reel-meta { gap: 10px; }
+  .reel__progress { width: 56px; }
   .hero__scroll-hint span:first-child { display: none; }
 }
+
 
 /* ── 08 · Plates (gallery slides) ────────────────────────────────── */
 .plate {
@@ -848,9 +843,7 @@ a { color: inherit; text-decoration: none; cursor: none; }
 
 /* ── 09 · Colophon + Booking form ───────────────────────────────── */
 .colophon {
-  min-height: 100vh;
-  min-height: 100svh;
-  padding: clamp(80px, 14vh, 160px) var(--gutter);
+  padding: clamp(56px, 8vh, 96px) var(--gutter) clamp(48px, 6vh, 80px);
   display: grid;
   place-items: center;
   position: relative;
@@ -992,7 +985,7 @@ a { color: inherit; text-decoration: none; cursor: none; }
   font-weight: 300;
   font-size: 17px;
   padding: 10px 0;
-  cursor: none;
+  
   transition: border-color 0.3s, color 0.3s;
   width: 100%;
   border-radius: 0;
@@ -1044,7 +1037,7 @@ a { color: inherit; text-decoration: none; cursor: none; }
 }
 .slot {
   position: relative;
-  cursor: none;
+  
 }
 .slot input {
   position: absolute;
@@ -1224,7 +1217,7 @@ a { color: inherit; text-decoration: none; cursor: none; }
   gap: 24px;
   padding: clamp(16px, 2.2vh, 26px) 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-  cursor: none;
+  
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
@@ -1360,7 +1353,6 @@ a { color: inherit; text-decoration: none; cursor: none; }
     transition-duration: 0.01ms !important;
   }
   .grain { display: none; }
-  .flare { display: none; }
 }
 
 /* ── 13 · Lenis scroll smoothing classes ────────────────────────── */
