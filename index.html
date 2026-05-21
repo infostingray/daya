@@ -111,10 +111,6 @@
     </button>
   </header>
 
-  <aside class="chrome chrome--side" aria-hidden="true">
-    <span class="chrome__rotate">Plate <span id="plate-current">01</span>/09</span>
-  </aside>
-
   <aside class="chrome chrome--side-right" aria-hidden="true">
     <span class="chrome__rotate">F/2.8 · ISO 400 · 1/125</span>
   </aside>
@@ -188,29 +184,29 @@
         </div>
       </div>
 
-      <!-- Clickable category chips · hover previews slide, click scrolls to plate -->
+      <!-- Clickable category chips · hover previews slide, click opens category page -->
       <nav class="hero__chips" id="hero-chips" aria-label="Categories">
-        <button class="chip is-active" data-slide-index="0" data-cat-link="#plate-01">
+        <button class="chip is-active" data-slide-index="0" data-cat-link="category.html?cat=lifestyle">
           <span class="chip__num">01</span>
           <span class="chip__name">Lifestyle</span>
           <i class="chip__progress"></i>
         </button>
-        <button class="chip" data-slide-index="1" data-cat-link="#plate-03">
+        <button class="chip" data-slide-index="1" data-cat-link="category.html?cat=products">
           <span class="chip__num">03</span>
           <span class="chip__name">Products</span>
           <i class="chip__progress"></i>
         </button>
-        <button class="chip" data-slide-index="2" data-cat-link="#plate-06">
+        <button class="chip" data-slide-index="2" data-cat-link="category.html?cat=food">
           <span class="chip__num">06</span>
           <span class="chip__name">Food</span>
           <i class="chip__progress"></i>
         </button>
-        <button class="chip" data-slide-index="3" data-cat-link="#plate-07">
+        <button class="chip" data-slide-index="3" data-cat-link="category.html?cat=hospitality">
           <span class="chip__num">07</span>
           <span class="chip__name">Hotels</span>
           <i class="chip__progress"></i>
         </button>
-        <button class="chip" data-slide-index="4" data-cat-link="#plate-04">
+        <button class="chip" data-slide-index="4" data-cat-link="category.html?cat=automotive">
           <span class="chip__num">04</span>
           <span class="chip__name">Automotive</span>
           <i class="chip__progress"></i>
@@ -262,150 +258,193 @@
       </div>
     </section>
 
-    <!-- EXHIBITION PLATES ────────────────────────────────────────── -->
-
-    <section class="plate" id="plate-01" data-scroll-section data-plate="01" data-cat="lifestyle">
-      <div class="plate__num"><span>01</span><i>/09</i></div>
-      <figure class="plate__figure" data-zoom>
-        <img loading="lazy" decoding="async"
-          src="assets/img/plates/01-lifestyle.jpg"
-          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1490723286627-4b66e6b2882a?w=2000&amp;q=85&amp;auto=format&amp;fit=crop';"
-          alt="Lifestyle plate" />
-      </figure>
-      <div class="plate__meta">
-        <span class="plate__cat">Lifestyle</span>
-        <h2 class="plate__title">Quiet hours, ordinary light.</h2>
-        <p class="plate__blurb">Twenty-four prints from interiors, mornings, hands, and the unhurried hours between things.</p>
-        <span class="plate__count">24 prints</span>
+    <!-- GALLERY · The work, as an asymmetric exhibition wall ────────
+         Click any tile to open the category's dedicated page.
+         ────────────────────────────────────────────────────────────── -->
+    <section class="gallery" id="gallery" data-scroll-section>
+      <div class="gallery__intro">
+        <div class="gallery__eyebrow">
+          <span class="dot"></span>
+          <span>The work</span>
+        </div>
+        <h2 class="gallery__title">
+          <span class="line"><span class="line__inner">Nine rooms.</span></span>
+          <span class="line"><span class="line__inner"><em>One studio.</em></span></span>
+        </h2>
       </div>
-    </section>
 
-    <section class="plate" id="plate-02" data-scroll-section data-plate="02" data-cat="people">
-      <div class="plate__num"><span>02</span><i>/09</i></div>
-      <figure class="plate__figure" data-zoom>
-        <img loading="lazy" decoding="async"
-          src="assets/img/plates/02-people.jpg"
-          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=2000&amp;q=85&amp;auto=format&amp;fit=crop';"
-          alt="People plate" />
-      </figure>
-      <div class="plate__meta">
-        <span class="plate__cat">People</span>
-        <h2 class="plate__title">Faces, held still.</h2>
-        <p class="plate__blurb">Editorial portraits — actors, founders, artists, strangers — composed against considered light.</p>
-        <span class="plate__count">31 prints</span>
-      </div>
-    </section>
+      <ul class="mosaic" role="list">
+        <!-- 01 · Lifestyle — anchor tile (2×2) -->
+        <li class="tile tile--xl">
+          <a class="tile__link" href="category.html?cat=lifestyle" data-cat-link>
+            <span class="tile__img">
+              <img loading="lazy" decoding="async"
+                src="assets/img/plates/01-lifestyle.jpg"
+                onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1490723286627-4b66e6b2882a?w=2000&amp;q=85&amp;auto=format&amp;fit=crop';"
+                alt="Lifestyle photography" />
+            </span>
+            <span class="tile__scrim"></span>
+            <span class="tile__meta">
+              <span class="tile__num">01 / 09</span>
+              <span class="tile__name">Lifestyle</span>
+              <span class="tile__count">24 prints</span>
+            </span>
+            <span class="tile__cta">View category <i>→</i></span>
+          </a>
+        </li>
 
-    <section class="plate" id="plate-03" data-scroll-section data-plate="03" data-cat="products">
-      <div class="plate__num"><span>03</span><i>/09</i></div>
-      <figure class="plate__figure" data-zoom>
-        <img loading="lazy" decoding="async"
-          src="assets/img/plates/03-products.jpg"
-          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=2000&amp;q=85&amp;auto=format&amp;fit=crop';"
-          alt="Products plate" />
-      </figure>
-      <div class="plate__meta">
-        <span class="plate__cat">Products</span>
-        <h2 class="plate__title">Objects, made luminous.</h2>
-        <p class="plate__blurb">Still life and packaging for fragrance, jewellery, electronics and small-batch goods. Light as the brief.</p>
-        <span class="plate__count">18 prints</span>
-      </div>
-    </section>
+        <!-- 02 · People -->
+        <li class="tile">
+          <a class="tile__link" href="category.html?cat=people" data-cat-link>
+            <span class="tile__img">
+              <img loading="lazy" decoding="async"
+                src="assets/img/plates/02-people.jpg"
+                onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=1400&amp;q=85&amp;auto=format&amp;fit=crop';"
+                alt="People & portrait photography" />
+            </span>
+            <span class="tile__scrim"></span>
+            <span class="tile__meta">
+              <span class="tile__num">02 / 09</span>
+              <span class="tile__name">People</span>
+              <span class="tile__count">31 prints</span>
+            </span>
+            <span class="tile__cta">View <i>→</i></span>
+          </a>
+        </li>
 
-    <section class="plate" id="plate-04" data-scroll-section data-plate="04" data-cat="automotive">
-      <div class="plate__num"><span>04</span><i>/09</i></div>
-      <figure class="plate__figure" data-zoom>
-        <img loading="lazy" decoding="async"
-          src="assets/img/plates/04-automotive.jpg"
-          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=2000&amp;q=85&amp;auto=format&amp;fit=crop';"
-          alt="Automotive plate" />
-      </figure>
-      <div class="plate__meta">
-        <span class="plate__cat">Automotive</span>
-        <h2 class="plate__title">Geometry in motion.</h2>
-        <p class="plate__blurb">Campaign work for manufacturers and aftermarket houses. Reflective bodies, weighted air, open roads.</p>
-        <span class="plate__count">22 prints</span>
-      </div>
-    </section>
+        <!-- 03 · Products — tall -->
+        <li class="tile tile--tall">
+          <a class="tile__link" href="category.html?cat=products" data-cat-link>
+            <span class="tile__img">
+              <img loading="lazy" decoding="async"
+                src="assets/img/plates/03-products.jpg"
+                onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=1400&amp;q=85&amp;auto=format&amp;fit=crop';"
+                alt="Product photography" />
+            </span>
+            <span class="tile__scrim"></span>
+            <span class="tile__meta">
+              <span class="tile__num">03 / 09</span>
+              <span class="tile__name">Products</span>
+              <span class="tile__count">18 prints</span>
+            </span>
+            <span class="tile__cta">View <i>→</i></span>
+          </a>
+        </li>
 
-    <section class="plate" id="plate-05" data-scroll-section data-plate="05" data-cat="commercial">
-      <div class="plate__num"><span>05</span><i>/09</i></div>
-      <figure class="plate__figure" data-zoom>
-        <img loading="lazy" decoding="async"
-          src="assets/img/plates/05-commercial.jpg"
-          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1483985988355-763728e1935b?w=2000&amp;q=85&amp;auto=format&amp;fit=crop';"
-          alt="Commercial plate" />
-      </figure>
-      <div class="plate__meta">
-        <span class="plate__cat">Commercial</span>
-        <h2 class="plate__title">Campaigns with a point of view.</h2>
-        <p class="plate__blurb">Long-form collaborations with fashion houses, agencies, and creative directors who refuse the obvious.</p>
-        <span class="plate__count">27 prints</span>
-      </div>
-    </section>
+        <!-- 04 · Automotive — wide -->
+        <li class="tile tile--wide">
+          <a class="tile__link" href="category.html?cat=automotive" data-cat-link>
+            <span class="tile__img">
+              <img loading="lazy" decoding="async"
+                src="assets/img/plates/04-automotive.jpg"
+                onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=2000&amp;q=85&amp;auto=format&amp;fit=crop';"
+                alt="Automotive photography" />
+            </span>
+            <span class="tile__scrim"></span>
+            <span class="tile__meta">
+              <span class="tile__num">04 / 09</span>
+              <span class="tile__name">Automotive</span>
+              <span class="tile__count">22 prints</span>
+            </span>
+            <span class="tile__cta">View <i>→</i></span>
+          </a>
+        </li>
 
-    <section class="plate" id="plate-06" data-scroll-section data-plate="06" data-cat="food">
-      <div class="plate__num"><span>06</span><i>/09</i></div>
-      <figure class="plate__figure" data-zoom>
-        <img loading="lazy" decoding="async"
-          src="assets/img/plates/06-food.jpg"
-          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=2000&amp;q=85&amp;auto=format&amp;fit=crop';"
-          alt="Food and drink plate" />
-      </figure>
-      <div class="plate__meta">
-        <span class="plate__cat">Food &amp; Drink</span>
-        <h2 class="plate__title">Plates, poured and lit.</h2>
-        <p class="plate__blurb">Menus, cookbooks, and label work for chefs and distillers — texture on the table.</p>
-        <span class="plate__count">19 prints</span>
-      </div>
-    </section>
+        <!-- 05 · Commercial -->
+        <li class="tile">
+          <a class="tile__link" href="category.html?cat=commercial" data-cat-link>
+            <span class="tile__img">
+              <img loading="lazy" decoding="async"
+                src="assets/img/plates/05-commercial.jpg"
+                onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1400&amp;q=85&amp;auto=format&amp;fit=crop';"
+                alt="Commercial photography" />
+            </span>
+            <span class="tile__scrim"></span>
+            <span class="tile__meta">
+              <span class="tile__num">05 / 09</span>
+              <span class="tile__name">Commercial</span>
+              <span class="tile__count">27 prints</span>
+            </span>
+            <span class="tile__cta">View <i>→</i></span>
+          </a>
+        </li>
 
-    <section class="plate" id="plate-07" data-scroll-section data-plate="07" data-cat="hospitality">
-      <div class="plate__num"><span>07</span><i>/09</i></div>
-      <figure class="plate__figure" data-zoom>
-        <img loading="lazy" decoding="async"
-          src="assets/img/plates/07-hospitality.jpg"
-          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=2000&amp;q=85&amp;auto=format&amp;fit=crop';"
-          alt="Hospitality plate" />
-      </figure>
-      <div class="plate__meta">
-        <span class="plate__cat">Restaurants &amp; Hotels</span>
-        <h2 class="plate__title">Rooms that hold the light.</h2>
-        <p class="plate__blurb">Hospitality stories for boutique hotels, dining rooms and atmosphere-led brands worldwide.</p>
-        <span class="plate__count">26 prints</span>
-      </div>
-    </section>
+        <!-- 06 · Food & Drink — tall -->
+        <li class="tile tile--tall">
+          <a class="tile__link" href="category.html?cat=food" data-cat-link>
+            <span class="tile__img">
+              <img loading="lazy" decoding="async"
+                src="assets/img/plates/06-food.jpg"
+                onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1400&amp;q=85&amp;auto=format&amp;fit=crop';"
+                alt="Food &amp; drink photography" />
+            </span>
+            <span class="tile__scrim"></span>
+            <span class="tile__meta">
+              <span class="tile__num">06 / 09</span>
+              <span class="tile__name">Food &amp; Drink</span>
+              <span class="tile__count">19 prints</span>
+            </span>
+            <span class="tile__cta">View <i>→</i></span>
+          </a>
+        </li>
 
-    <section class="plate" id="plate-08" data-scroll-section data-plate="08" data-cat="travel">
-      <div class="plate__num"><span>08</span><i>/09</i></div>
-      <figure class="plate__figure" data-zoom>
-        <img loading="lazy" decoding="async"
-          src="assets/img/plates/08-travel.jpg"
-          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=2000&amp;q=85&amp;auto=format&amp;fit=crop';"
-          alt="Travel plate" />
-      </figure>
-      <div class="plate__meta">
-        <span class="plate__cat">Travel</span>
-        <h2 class="plate__title">Elsewhere, on assignment.</h2>
-        <p class="plate__blurb">Field work from coastal Italy, the High Atlas, Japan in the off-season, and stops in between.</p>
-        <span class="plate__count">34 prints</span>
-      </div>
-    </section>
+        <!-- 07 · Hospitality — wide -->
+        <li class="tile tile--wide">
+          <a class="tile__link" href="category.html?cat=hospitality" data-cat-link>
+            <span class="tile__img">
+              <img loading="lazy" decoding="async"
+                src="assets/img/plates/07-hospitality.jpg"
+                onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=2000&amp;q=85&amp;auto=format&amp;fit=crop';"
+                alt="Restaurants &amp; hotels photography" />
+            </span>
+            <span class="tile__scrim"></span>
+            <span class="tile__meta">
+              <span class="tile__num">07 / 09</span>
+              <span class="tile__name">Restaurants &amp; Hotels</span>
+              <span class="tile__count">26 prints</span>
+            </span>
+            <span class="tile__cta">View <i>→</i></span>
+          </a>
+        </li>
 
-    <section class="plate" id="plate-09" data-scroll-section data-plate="09" data-cat="artwork">
-      <div class="plate__num"><span>09</span><i>/09</i></div>
-      <figure class="plate__figure" data-zoom>
-        <img loading="lazy" decoding="async"
-          src="assets/img/plates/09-artwork.jpg"
-          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1549887534-1541e9326642?w=2000&amp;q=85&amp;auto=format&amp;fit=crop';"
-          alt="Artwork plate" />
-      </figure>
-      <div class="plate__meta">
-        <span class="plate__cat">Artwork</span>
-        <h2 class="plate__title">Limited editions.</h2>
-        <p class="plate__blurb">Self-initiated prints, occasional exhibitions, and one-off works. Available on request.</p>
-        <span class="plate__count">12 prints</span>
-      </div>
+        <!-- 08 · Travel -->
+        <li class="tile">
+          <a class="tile__link" href="category.html?cat=travel" data-cat-link>
+            <span class="tile__img">
+              <img loading="lazy" decoding="async"
+                src="assets/img/plates/08-travel.jpg"
+                onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1400&amp;q=85&amp;auto=format&amp;fit=crop';"
+                alt="Travel photography" />
+            </span>
+            <span class="tile__scrim"></span>
+            <span class="tile__meta">
+              <span class="tile__num">08 / 09</span>
+              <span class="tile__name">Travel</span>
+              <span class="tile__count">34 prints</span>
+            </span>
+            <span class="tile__cta">View <i>→</i></span>
+          </a>
+        </li>
+
+        <!-- 09 · Artwork — wide closer -->
+        <li class="tile tile--wide">
+          <a class="tile__link" href="category.html?cat=artwork" data-cat-link>
+            <span class="tile__img">
+              <img loading="lazy" decoding="async"
+                src="assets/img/plates/09-artwork.jpg"
+                onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1549887534-1541e9326642?w=2000&amp;q=85&amp;auto=format&amp;fit=crop';"
+                alt="Artwork & limited editions" />
+            </span>
+            <span class="tile__scrim"></span>
+            <span class="tile__meta">
+              <span class="tile__num">09 / 09</span>
+              <span class="tile__name">Artwork</span>
+              <span class="tile__count">12 prints</span>
+            </span>
+            <span class="tile__cta">View <i>→</i></span>
+          </a>
+        </li>
+      </ul>
     </section>
 
     <!-- COLOPHON / CONTACT + BOOKING FORM ───────────────────────── -->
@@ -415,12 +454,6 @@
           <span class="dot"></span>
           <span>End of exhibition · Begin a project</span>
         </div>
-
-        <h2 class="colophon__title">
-          <span class="line"><span class="line__inner">Bring a story.</span></span>
-          <span class="line"><span class="line__inner"><em>We'll give it</em></span></span>
-          <span class="line"><span class="line__inner">the light it needs.</span></span>
-        </h2>
 
         <div class="colophon__layout">
           <!-- Left column: studio facts -->
@@ -585,63 +618,63 @@
       </header>
 
       <ol class="index-list">
-        <li class="index-list__item" data-target="#plate-01">
+        <li class="index-list__item" data-href="category.html?cat=lifestyle">
           <span class="idx__num">01</span>
           <span class="idx__name">Lifestyle</span>
           <span class="idx__rule"></span>
           <span class="idx__count">24 prints</span>
           <span class="idx__peek"><img src="assets/img/plates/01-lifestyle.jpg" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1490723286627-4b66e6b2882a?w=400&amp;q=70&amp;auto=format&amp;fit=crop';" alt="" loading="lazy" /></span>
         </li>
-        <li class="index-list__item" data-target="#plate-02">
+        <li class="index-list__item" data-href="category.html?cat=people">
           <span class="idx__num">02</span>
           <span class="idx__name">People</span>
           <span class="idx__rule"></span>
           <span class="idx__count">31 prints</span>
           <span class="idx__peek"><img src="assets/img/plates/02-people.jpg" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&amp;q=70&amp;auto=format&amp;fit=crop';" alt="" loading="lazy" /></span>
         </li>
-        <li class="index-list__item" data-target="#plate-03">
+        <li class="index-list__item" data-href="category.html?cat=products">
           <span class="idx__num">03</span>
           <span class="idx__name">Products</span>
           <span class="idx__rule"></span>
           <span class="idx__count">18 prints</span>
           <span class="idx__peek"><img src="assets/img/plates/03-products.jpg" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=400&amp;q=70&amp;auto=format&amp;fit=crop';" alt="" loading="lazy" /></span>
         </li>
-        <li class="index-list__item" data-target="#plate-04">
+        <li class="index-list__item" data-href="category.html?cat=automotive">
           <span class="idx__num">04</span>
           <span class="idx__name">Automotive</span>
           <span class="idx__rule"></span>
           <span class="idx__count">22 prints</span>
           <span class="idx__peek"><img src="assets/img/plates/04-automotive.jpg" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&amp;q=70&amp;auto=format&amp;fit=crop';" alt="" loading="lazy" /></span>
         </li>
-        <li class="index-list__item" data-target="#plate-05">
+        <li class="index-list__item" data-href="category.html?cat=commercial">
           <span class="idx__num">05</span>
           <span class="idx__name">Commercial</span>
           <span class="idx__rule"></span>
           <span class="idx__count">27 prints</span>
           <span class="idx__peek"><img src="assets/img/plates/05-commercial.jpg" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&amp;q=70&amp;auto=format&amp;fit=crop';" alt="" loading="lazy" /></span>
         </li>
-        <li class="index-list__item" data-target="#plate-06">
+        <li class="index-list__item" data-href="category.html?cat=food">
           <span class="idx__num">06</span>
           <span class="idx__name">Food &amp; Drink</span>
           <span class="idx__rule"></span>
           <span class="idx__count">19 prints</span>
           <span class="idx__peek"><img src="assets/img/plates/06-food.jpg" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&amp;q=70&amp;auto=format&amp;fit=crop';" alt="" loading="lazy" /></span>
         </li>
-        <li class="index-list__item" data-target="#plate-07">
+        <li class="index-list__item" data-href="category.html?cat=hospitality">
           <span class="idx__num">07</span>
           <span class="idx__name">Restaurants &amp; Hotels</span>
           <span class="idx__rule"></span>
           <span class="idx__count">26 prints</span>
           <span class="idx__peek"><img src="assets/img/plates/07-hospitality.jpg" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=400&amp;q=70&amp;auto=format&amp;fit=crop';" alt="" loading="lazy" /></span>
         </li>
-        <li class="index-list__item" data-target="#plate-08">
+        <li class="index-list__item" data-href="category.html?cat=travel">
           <span class="idx__num">08</span>
           <span class="idx__name">Travel</span>
           <span class="idx__rule"></span>
           <span class="idx__count">34 prints</span>
           <span class="idx__peek"><img src="assets/img/plates/08-travel.jpg" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400&amp;q=70&amp;auto=format&amp;fit=crop';" alt="" loading="lazy" /></span>
         </li>
-        <li class="index-list__item" data-target="#plate-09">
+        <li class="index-list__item" data-href="category.html?cat=artwork">
           <span class="idx__num">09</span>
           <span class="idx__name">Artwork</span>
           <span class="idx__rule"></span>

@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Daya Studios — Category</title>
+  <meta name="description" content="Daya Studios — photography portfolio category." />
+  <meta name="theme-color" content="#ffffff" />
+
+  <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:site_name"   content="Daya Studios" />
+  <meta property="og:title"       content="Daya Studios — Photography" />
+  <meta property="og:description" content="Photography across lifestyle, hospitality, automotive and commercial." />
+  <meta property="og:image"       content="https://infostingray.github.io/daya/assets/img/og-preview.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200..900;1,9..144,200..900&amp;family=IBM+Plex+Mono:wght@300;400;500&amp;display=swap" />
+
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/category.css" />
+</head>
+<body class="category-page">
+
+  <!-- ────────────────────────────────────────────────────────────────
+       TOP CHROME · Logo + Frames trigger
+       ──────────────────────────────────────────────────────────────── -->
+  <header class="chrome chrome--top">
+    <a href="index.html" class="chrome__brand" aria-label="Daya Studios — home">
+      <img class="brand__logo brand__logo--dark"  src="assets/img/logo.png"       alt="Daya Studios" />
+    </a>
+
+    <button class="chrome__nav-trigger" id="nav-trigger" aria-controls="index-overlay" aria-expanded="false">
+      <span class="nav-trigger__label">Frames</span>
+      <span class="nav-trigger__lines" aria-hidden="true"><i></i><i></i><i></i></span>
+    </button>
+  </header>
+
+  <!-- ────────────────────────────────────────────────────────────────
+       CATEGORY HEADER · Eyebrow, title, blurb, back link
+       Content populated by category.js based on ?cat= URL param
+       ──────────────────────────────────────────────────────────────── -->
+  <section class="cat-hero">
+    <div class="cat-hero__inner">
+      <a class="cat-hero__back" href="index.html#gallery" aria-label="Back to all categories">
+        <svg viewBox="0 0 24 24" aria-hidden="true" width="14" height="14"><path d="M19 12H5M11 18l-6-6 6-6" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="square"/></svg>
+        <span>Back to all frames</span>
+      </a>
+      <div class="cat-hero__eyebrow">
+        <span class="dot"></span>
+        <span><span id="cat-num">01</span> &nbsp;·&nbsp; <span id="cat-count">— prints</span></span>
+      </div>
+      <h1 class="cat-hero__title" id="cat-title">Category</h1>
+      <p class="cat-hero__blurb" id="cat-blurb"></p>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────────────────────────────────────
+       PHOTO GALLERY · Masonry layout via CSS columns
+       ──────────────────────────────────────────────────────────────── -->
+  <main class="cat-gallery">
+    <div class="photos" id="photos" aria-live="polite">
+      <!-- Photos injected by category.js -->
+    </div>
+  </main>
+
+  <!-- ────────────────────────────────────────────────────────────────
+       PAGINATION · Prev / Next categories
+       ──────────────────────────────────────────────────────────────── -->
+  <nav class="cat-nav" aria-label="Category navigation">
+    <a class="cat-nav__link cat-nav__link--prev" id="cat-prev" href="#">
+      <span class="cat-nav__label">Previous</span>
+      <span class="cat-nav__name">—</span>
+    </a>
+    <a class="cat-nav__link cat-nav__link--next" id="cat-next" href="#">
+      <span class="cat-nav__label">Next</span>
+      <span class="cat-nav__name">—</span>
+    </a>
+  </nav>
+
+  <!-- ────────────────────────────────────────────────────────────────
+       MINI COLOPHON · Brief footer with CTA back to bookings
+       ──────────────────────────────────────────────────────────────── -->
+  <footer class="cat-footer">
+    <div class="cat-footer__inner">
+      <div class="cat-footer__copy">
+        <span class="cat-footer__eyebrow">
+          <span class="dot"></span>
+          <span>Like what you see?</span>
+        </span>
+        <p class="cat-footer__line">
+          Take this story further — <a href="index.html#contact">book a shoot</a> or <a href="index.html#gallery">browse the other categories</a>.
+        </p>
+      </div>
+      <div class="cat-footer__signature">
+        <span>© Daya Studios</span>
+        <span class="dim">·</span>
+        <span>All works exhibited are the property of the studio.</span>
+        <span class="colophon__credit">
+          <span class="dim">Website by</span>
+          <a href="https://www.swottm.com" target="_blank" rel="noopener noreferrer">Swot Creative Hub</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ────────────────────────────────────────────────────────────────
+       FRAMES OVERLAY · Same shared menu as the home page
+       ──────────────────────────────────────────────────────────────── -->
+  <nav class="index-overlay" id="index-overlay" aria-hidden="true">
+    <div class="index-overlay__veil"></div>
+    <div class="index-overlay__inner">
+      <header class="index-overlay__head">
+        <span class="index-overlay__eyebrow">The frames · A catalogue of plates</span>
+        <button class="index-overlay__close" id="index-close" aria-label="Close frames">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.25" fill="none" stroke-linecap="square"/></svg>
+        </button>
+      </header>
+
+      <ol class="index-list">
+        <li class="index-list__item" data-href="category.html?cat=lifestyle">
+          <span class="idx__num">01</span><span class="idx__name">Lifestyle</span>
+          <span class="idx__rule"></span><span class="idx__count">24 prints</span>
+        </li>
+        <li class="index-list__item" data-href="category.html?cat=people">
+          <span class="idx__num">02</span><span class="idx__name">People</span>
+          <span class="idx__rule"></span><span class="idx__count">31 prints</span>
+        </li>
+        <li class="index-list__item" data-href="category.html?cat=products">
+          <span class="idx__num">03</span><span class="idx__name">Products</span>
+          <span class="idx__rule"></span><span class="idx__count">18 prints</span>
+        </li>
+        <li class="index-list__item" data-href="category.html?cat=automotive">
+          <span class="idx__num">04</span><span class="idx__name">Automotive</span>
+          <span class="idx__rule"></span><span class="idx__count">22 prints</span>
+        </li>
+        <li class="index-list__item" data-href="category.html?cat=commercial">
+          <span class="idx__num">05</span><span class="idx__name">Commercial</span>
+          <span class="idx__rule"></span><span class="idx__count">27 prints</span>
+        </li>
+        <li class="index-list__item" data-href="category.html?cat=food">
+          <span class="idx__num">06</span><span class="idx__name">Food &amp; Drink</span>
+          <span class="idx__rule"></span><span class="idx__count">19 prints</span>
+        </li>
+        <li class="index-list__item" data-href="category.html?cat=hospitality">
+          <span class="idx__num">07</span><span class="idx__name">Restaurants &amp; Hotels</span>
+          <span class="idx__rule"></span><span class="idx__count">26 prints</span>
+        </li>
+        <li class="index-list__item" data-href="category.html?cat=travel">
+          <span class="idx__num">08</span><span class="idx__name">Travel</span>
+          <span class="idx__rule"></span><span class="idx__count">34 prints</span>
+        </li>
+        <li class="index-list__item" data-href="category.html?cat=artwork">
+          <span class="idx__num">09</span><span class="idx__name">Artwork</span>
+          <span class="idx__rule"></span><span class="idx__count">12 prints</span>
+        </li>
+      </ol>
+
+      <footer class="index-overlay__foot">
+        <span>Press <kbd>Esc</kbd> to close</span>
+      </footer>
+    </div>
+  </nav>
+
+  <!-- ────────────────────────────────────────────────────────────────
+       SCRIPTS · Data + page logic
+       ──────────────────────────────────────────────────────────────── -->
+  <script src="assets/js/category-data.js"></script>
+  <script src="assets/js/category.js"></script>
+</body>
+</html>
