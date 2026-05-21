@@ -161,32 +161,29 @@ a { color: inherit; text-decoration: none;  }
 /* D-mark — develops onto the navy field via scan-reveal + split assembly */
 .preloader__mark {
   position: relative;
-  width: clamp(120px, 16vw, 200px);
-  aspect-ratio: 720 / 1033;
+  width: clamp(140px, 18vw, 240px);
+  aspect-ratio: 820 / 1113;
   z-index: 2;
   display: grid;
   place-items: center;
   filter: drop-shadow(0 10px 40px rgba(0, 0, 0, 0.45));
-  overflow: hidden;
-  border-radius: 6px;
 }
 
-/* The mark itself starts invisible and is revealed by the scan */
+/* Inner frame: clips the scan + shutters but lets the ® halo overflow freely */
 .preloader__mark img {
   position: relative;
   z-index: 2;
   width: 100%;
   height: 100%;
   object-fit: contain;
-  /* clip from the bottom — top stays exposed as the scan sweeps down */
   clip-path: inset(0 0 100% 0);
-  filter: blur(8px) saturate(0.6);
-  animation: markDevelop 1.6s cubic-bezier(0.65, 0, 0.35, 1) 0.3s forwards;
+  filter: blur(8px) saturate(0.5);
+  animation: markDevelop 2.4s cubic-bezier(0.65, 0, 0.35, 1) 0.4s forwards;
 }
 @keyframes markDevelop {
-  0%   { clip-path: inset(0 0 100% 0); filter: blur(8px)  saturate(0.6); }
-  60%  { clip-path: inset(0 0 0    0); filter: blur(3px)  saturate(0.85); }
-  100% { clip-path: inset(0 0 0    0); filter: blur(0)    saturate(1); }
+  0%   { clip-path: inset(0 0 100% 0); filter: blur(8px) saturate(0.5); }
+  60%  { clip-path: inset(0 0 0    0); filter: blur(3px) saturate(0.85); }
+  100% { clip-path: inset(0 0 0    0); filter: blur(0)   saturate(1); }
 }
 
 /* Bright scan line that follows the reveal edge — like a developing tray */
@@ -206,7 +203,7 @@ a { color: inherit; text-decoration: none;  }
     0 0 40px rgba(251, 127, 64, 0.45);
   z-index: 3;
   opacity: 0;
-  animation: scanSweep 1.6s cubic-bezier(0.65, 0, 0.35, 1) 0.3s forwards;
+  animation: scanSweep 2.4s cubic-bezier(0.65, 0, 0.35, 1) 0.4s forwards;
 }
 @keyframes scanSweep {
   0%   { top: 0%;   opacity: 0; }
@@ -215,14 +212,14 @@ a { color: inherit; text-decoration: none;  }
   100% { top: 100%; opacity: 0; }
 }
 
-/* Two faint navy "shutter" panels that retract for the initial reveal */
+/* Faint navy "shutter" panels retract for the initial reveal */
 .preloader__mark-split {
   position: absolute;
   top: 0; bottom: 0;
   width: 52%;
   background: var(--brand-blue-deep);
   z-index: 4;
-  animation: shutterOpen 0.7s cubic-bezier(0.65, 0, 0.35, 1) 0.15s forwards;
+  animation: shutterOpen 1.1s cubic-bezier(0.65, 0, 0.35, 1) 0.2s forwards;
 }
 .preloader__mark-split--left  { left:  0; transform-origin: left  center; }
 .preloader__mark-split--right { right: 0; transform-origin: right center; }
@@ -230,7 +227,7 @@ a { color: inherit; text-decoration: none;  }
   0%   { transform: scaleX(1); }
   100% { transform: scaleX(0); }
 }
-.preloader__mark-split--right { animation-delay: 0.2s; }
+.preloader__mark-split--right { animation-delay: 0.35s; }
 
 /* Orange halo pulses with a heartbeat rhythm AFTER the develop completes */
 .preloader__mark-halo {
@@ -248,7 +245,7 @@ a { color: inherit; text-decoration: none;  }
   opacity: 0;
   z-index: 1;
   pointer-events: none;
-  animation: dotHeartbeat 1.8s ease-out 1.9s forwards;
+  animation: dotHeartbeat 2.6s ease-out 2.9s forwards;
 }
 @keyframes dotHeartbeat {
   0%   { opacity: 0;   transform: translate(-50%, -50%) scale(0.4); }
@@ -741,9 +738,9 @@ body.hero-in-view .chrome--side-right { color: rgba(255, 255, 255, 0.72); }
     left: var(--gutter);
     right: var(--gutter);
     bottom: clamp(72px, 10vh, 100px);
+    gap: 6px;
   }
-  .chip { padding: 8px 12px; font-size: 10px; letter-spacing: 0.16em; }
-  .chip__name { display: none; }
+  .chip { padding: 8px 12px; font-size: 10px; letter-spacing: 0.14em; gap: 6px; }
 }
 @media (max-width: 768px) {
   .hero__overlay {
