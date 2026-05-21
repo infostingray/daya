@@ -158,51 +158,105 @@ a { color: inherit; text-decoration: none;  }
   100% { opacity: 0; transform: translate(10%, -50%) rotate(-22deg); }
 }
 
-/* D-mark image cropped from the actual logo — fades + scales into view */
+/* D-mark — develops onto the navy field via scan-reveal + split assembly */
 .preloader__mark {
   position: relative;
   width: clamp(120px, 16vw, 200px);
-  aspect-ratio: 720 / 1033;  /* matches the cropped d-mark.png */
+  aspect-ratio: 720 / 1033;
   z-index: 2;
   display: grid;
   place-items: center;
-  opacity: 0;
-  transform: scale(0.82);
   filter: drop-shadow(0 10px 40px rgba(0, 0, 0, 0.45));
-  animation: markIn 1.2s var(--ease-out-expo) 0.25s forwards;
+  overflow: hidden;
+  border-radius: 6px;
 }
+
+/* The mark itself starts invisible and is revealed by the scan */
 .preloader__mark img {
   position: relative;
   z-index: 2;
   width: 100%;
   height: 100%;
   object-fit: contain;
+  /* clip from the bottom — top stays exposed as the scan sweeps down */
+  clip-path: inset(0 0 100% 0);
+  filter: blur(8px) saturate(0.6);
+  animation: markDevelop 1.6s cubic-bezier(0.65, 0, 0.35, 1) 0.3s forwards;
 }
+@keyframes markDevelop {
+  0%   { clip-path: inset(0 0 100% 0); filter: blur(8px)  saturate(0.6); }
+  60%  { clip-path: inset(0 0 0    0); filter: blur(3px)  saturate(0.85); }
+  100% { clip-path: inset(0 0 0    0); filter: blur(0)    saturate(1); }
+}
+
+/* Bright scan line that follows the reveal edge — like a developing tray */
+.preloader__mark-scan {
+  position: absolute;
+  left: 0; right: 0;
+  top: 0;
+  height: 3px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(251, 127, 64, 0.4) 12%,
+    var(--brand-orange) 50%,
+    rgba(251, 127, 64, 0.4) 88%,
+    transparent 100%);
+  box-shadow:
+    0 0 18px rgba(251, 127, 64, 0.85),
+    0 0 40px rgba(251, 127, 64, 0.45);
+  z-index: 3;
+  opacity: 0;
+  animation: scanSweep 1.6s cubic-bezier(0.65, 0, 0.35, 1) 0.3s forwards;
+}
+@keyframes scanSweep {
+  0%   { top: 0%;   opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* Two faint navy "shutter" panels that retract for the initial reveal */
+.preloader__mark-split {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 52%;
+  background: var(--brand-blue-deep);
+  z-index: 4;
+  animation: shutterOpen 0.7s cubic-bezier(0.65, 0, 0.35, 1) 0.15s forwards;
+}
+.preloader__mark-split--left  { left:  0; transform-origin: left  center; }
+.preloader__mark-split--right { right: 0; transform-origin: right center; }
+@keyframes shutterOpen {
+  0%   { transform: scaleX(1); }
+  100% { transform: scaleX(0); }
+}
+.preloader__mark-split--right { animation-delay: 0.2s; }
+
+/* Orange halo pulses with a heartbeat rhythm AFTER the develop completes */
 .preloader__mark-halo {
   position: absolute;
-  /* The orange dot sits at ~50% horizontal, ~70% vertical of the D-mark image */
   left: 47%;
   top: 70%;
   width: 64%;
   aspect-ratio: 1;
-  transform: translate(-50%, -50%) scale(0.3);
+  transform: translate(-50%, -50%) scale(0.4);
   background: radial-gradient(circle at 50% 50%,
-    rgba(251, 127, 64, 0.75) 0%,
-    rgba(251, 127, 64, 0.35) 26%,
+    rgba(251, 127, 64, 0.85) 0%,
+    rgba(251, 127, 64, 0.35) 28%,
     rgba(251, 127, 64, 0) 65%);
-  filter: blur(20px);
+  filter: blur(22px);
   opacity: 0;
   z-index: 1;
   pointer-events: none;
-  animation: dotHalo 2.4s ease-out 1.4s forwards;
+  animation: dotHeartbeat 1.8s ease-out 1.9s forwards;
 }
-@keyframes markIn {
-  to { opacity: 1; transform: scale(1); }
-}
-@keyframes dotHalo {
-  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
-  60%  { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
-  100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+@keyframes dotHeartbeat {
+  0%   { opacity: 0;   transform: translate(-50%, -50%) scale(0.4); }
+  15%  { opacity: 0.95; transform: translate(-50%, -50%) scale(1.25); }
+  28%  { opacity: 0.45; transform: translate(-50%, -50%) scale(0.9);  }
+  42%  { opacity: 1;   transform: translate(-50%, -50%) scale(1.35); }
+  56%  { opacity: 0.55; transform: translate(-50%, -50%) scale(1);    }
+  100% { opacity: 0.75; transform: translate(-50%, -50%) scale(1.1);  }
 }
 
 /* Catalog meta under iris */
@@ -272,7 +326,20 @@ a { color: inherit; text-decoration: none;  }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  mix-blend-mode: normal;
+  background: rgba(255, 255, 255, 0.88);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  backdrop-filter: blur(18px) saturate(1.2);
+  border-bottom: 1px solid rgba(0, 50, 129, 0.08);
+  transition: background 0.4s var(--ease-out-expo),
+              border-color 0.4s,
+              backdrop-filter 0.4s;
+}
+/* While the hero is in view, the top bar dissolves so the photo can breathe */
+body.hero-in-view .chrome--top {
+  background: transparent;
+  border-color: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 
 .chrome__brand {
@@ -572,40 +639,64 @@ body.hero-in-view .chrome--side-right { color: rgba(255, 255, 255, 0.72); }
   background: rgba(251, 127, 64, 0.12);
 }
 
-/* Slide counter + progress indicator (bottom-right of hero) */
-.hero__reel-meta {
+/* Clickable category chips · sit bottom-right of hero, hover previews slide */
+.hero__chips {
   position: absolute;
   right: var(--gutter);
   bottom: clamp(28px, 4vh, 48px);
   z-index: 3;
   display: flex;
-  align-items: center;
-  gap: 16px;
-  color: var(--paper);
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: calc(100% - var(--gutter) * 2 - 200px);
 }
-.reel__counter {
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px 11px;
   font-family: var(--mono);
   font-size: 11px;
-  letter-spacing: 0.28em;
-  font-variant-numeric: tabular-nums;
-  color: rgba(255, 255, 255, 0.92);
-}
-.reel__counter .dim { opacity: 0.4; margin: 0 2px; }
-.reel__progress {
-  width: 100px;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.22);
-  position: relative;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.68);
+  background: rgba(0, 31, 82, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
   overflow: hidden;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  transition: color 0.3s, border-color 0.3s, background 0.3s, transform 0.3s var(--ease-out-expo);
 }
-.reel__progress i {
+.chip:hover {
+  color: var(--paper);
+  border-color: rgba(255, 255, 255, 0.55);
+  background: rgba(0, 31, 82, 0.5);
+  transform: translateY(-1px);
+}
+.chip.is-active {
+  color: var(--paper);
+  border-color: var(--brand-orange);
+  background: rgba(251, 127, 64, 0.18);
+}
+.chip__num {
+  color: var(--brand-orange);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.chip.is-active .chip__num { color: var(--paper); }
+.chip__name { font-weight: 400; }
+.chip__progress {
   position: absolute;
-  inset: 0;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
   background: var(--brand-orange);
-  transform-origin: left center;
   transform: scaleX(0);
+  transform-origin: left center;
 }
-.reel__progress i.is-running {
+.chip.is-active .chip__progress {
   transform: scaleX(1);
   transition: transform 5.4s linear;
 }
@@ -643,13 +734,22 @@ body.hero-in-view .chrome--side-right { color: rgba(255, 255, 255, 0.72); }
   100% { transform: translateX(100%); }
 }
 
+@media (max-width: 900px) {
+  .hero__chips {
+    max-width: calc(100% - var(--gutter) * 2);
+    justify-content: flex-start;
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: clamp(72px, 10vh, 100px);
+  }
+  .chip { padding: 8px 12px; font-size: 10px; letter-spacing: 0.16em; }
+  .chip__name { display: none; }
+}
 @media (max-width: 768px) {
   .hero__overlay {
     padding-top: clamp(96px, 14vh, 140px);
-    padding-bottom: clamp(120px, 14vh, 160px);
+    padding-bottom: clamp(180px, 22vh, 220px);
   }
-  .hero__reel-meta { gap: 10px; }
-  .reel__progress { width: 56px; }
   .hero__scroll-hint span:first-child { display: none; }
 }
 
