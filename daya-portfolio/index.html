@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Daya Studios — Photography</title>
+  <meta name="description" content="Daya Studios — an exhibition of photography across lifestyle, people, products, automotive, commercial, food, hospitality, travel and artwork." />
+  <meta name="theme-color" content="#0a0a0a" />
+
+  <!-- Performance: preconnect to image CDN and font provider -->
+  <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Typography: Fraunces (editorial display + body), IBM Plex Mono (catalog numerals) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200..900;1,9..144,200..900&amp;family=IBM+Plex+Mono:wght@300;400;500&amp;display=swap" />
+
+  <link rel="stylesheet" href="assets/css/style.css" />
+
+  <!-- Hero image preload so it's ready the instant the iris opens -->
+  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=2400&amp;q=85&amp;auto=format&amp;fit=crop" fetchpriority="high" />
+</head>
+<body>
+
+  <!-- ────────────────────────────────────────────────────────────────
+       PRELOADER  ·  "Exposing the plate"
+       Light leak → aperture iris → focus pull → reveal
+       ──────────────────────────────────────────────────────────────── -->
+  <div class="preloader" id="preloader" aria-hidden="false" role="status">
+    <!-- Light leak streak (CSS animated gradient on a rotated element) -->
+    <div class="preloader__leak" aria-hidden="true"></div>
+    <div class="preloader__leak preloader__leak--alt" aria-hidden="true"></div>
+
+    <!-- Aperture iris (SVG, 8-blade) -->
+    <svg class="preloader__iris" viewBox="-100 -100 200 200" aria-hidden="true">
+      <defs>
+        <radialGradient id="irisGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#d4a574" stop-opacity="0.55" />
+          <stop offset="60%" stop-color="#d4a574" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+      <circle class="iris__glow" r="120" fill="url(#irisGlow)" />
+      <g class="iris__blades">
+        <!-- 8 blades, rotated programmatically by JS -->
+        <polygon class="blade" points="0,0 120,-60 120,60" />
+        <polygon class="blade" points="0,0 120,-60 120,60" />
+        <polygon class="blade" points="0,0 120,-60 120,60" />
+        <polygon class="blade" points="0,0 120,-60 120,60" />
+        <polygon class="blade" points="0,0 120,-60 120,60" />
+        <polygon class="blade" points="0,0 120,-60 120,60" />
+        <polygon class="blade" points="0,0 120,-60 120,60" />
+        <polygon class="blade" points="0,0 120,-60 120,60" />
+      </g>
+    </svg>
+
+    <!-- Catalog text below the iris -->
+    <div class="preloader__meta">
+      <div class="preloader__rule"></div>
+      <div class="preloader__row">
+        <span class="preloader__label" id="preloader-phase">EXPOSING THE PLATE</span>
+        <span class="preloader__count"><span id="preloader-pct">000</span><span class="dim">/100</span></span>
+      </div>
+      <div class="preloader__rule"></div>
+    </div>
+
+    <div class="preloader__signature">
+      <span>Daya Studios</span>
+      <span class="dim">·</span>
+      <span>MMXXV Exhibition</span>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────────────────────────────────────
+       PERSISTENT UI  ·  Cursor / grain / vignette / lens flare
+       ──────────────────────────────────────────────────────────────── -->
+  <div class="cursor" id="cursor" aria-hidden="true">
+    <div class="cursor__ring"></div>
+    <div class="cursor__dot"></div>
+    <div class="cursor__label" id="cursor-label"></div>
+  </div>
+
+  <!-- The "wow" feature: a soft warm lens flare that follows the cursor.
+       Uses screen blend so it only glows over dark/photographic areas. -->
+  <div class="flare" id="flare" aria-hidden="true"></div>
+
+  <!-- Three.js mounts here for subtle floating dust motes -->
+  <canvas class="dust" id="dust" aria-hidden="true"></canvas>
+
+  <!-- Animated SVG film grain overlay sits above everything but cursor -->
+  <svg class="grain" aria-hidden="true">
+    <filter id="grainFilter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
+      <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.45 0" />
+    </filter>
+    <rect width="100%" height="100%" filter="url(#grainFilter)" />
+  </svg>
+
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- ────────────────────────────────────────────────────────────────
+       TOP CHROME  ·  Wordmark, nav trigger, frame counter
+       ──────────────────────────────────────────────────────────────── -->
+  <header class="chrome chrome--top">
+    <a href="#" class="chrome__brand" aria-label="Daya Studios — home">
+      <span class="brand__mark">DS</span>
+      <span class="brand__name">Daya Studios</span>
+    </a>
+
+    <button class="chrome__nav-trigger" id="nav-trigger" aria-controls="index-overlay" aria-expanded="false">
+      <span class="nav-trigger__label">Index</span>
+      <span class="nav-trigger__lines" aria-hidden="true"><i></i><i></i><i></i></span>
+    </button>
+  </header>
+
+  <aside class="chrome chrome--side" aria-hidden="true">
+    <span class="chrome__rotate">Plate <span id="plate-current">01</span>/09</span>
+  </aside>
+
+  <aside class="chrome chrome--side-right" aria-hidden="true">
+    <span class="chrome__rotate">F/2.8 · ISO 400 · 1/125</span>
+  </aside>
+
+  <!-- ────────────────────────────────────────────────────────────────
+       MAIN  ·  Hero + Exhibition plates
+       ──────────────────────────────────────────────────────────────── -->
+  <main id="scroll-root" data-scroll-container>
+
+    <!-- HERO ─────────────────────────────────────────────────────── -->
+    <section class="hero" data-scroll-section data-plate="00">
+      <figure class="hero__plate">
+        <img
+          class="hero__img"
+          src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=2400&amp;q=85&amp;auto=format&amp;fit=crop"
+          alt="A photographer's editorial work, opening plate"
+          fetchpriority="high"
+        />
+        <div class="hero__veil"></div>
+      </figure>
+
+      <div class="hero__copy">
+        <div class="hero__eyebrow">
+          <span class="dot"></span>
+          <span>An exhibition by Daya Studios &nbsp;·&nbsp; Nine plates</span>
+        </div>
+
+        <h1 class="hero__title" aria-label="The light, the lens, the story.">
+          <span class="line"><span class="line__inner">The light,</span></span>
+          <span class="line"><span class="line__inner"><em>the lens,</em></span></span>
+          <span class="line"><span class="line__inner">the story.</span></span>
+        </h1>
+
+        <p class="hero__lede">
+          Photography across lifestyle, hospitality, automotive and commercial — composed in shadow,
+          finished by hand. Move through the rooms.
+        </p>
+
+        <div class="hero__cta-row">
+          <button class="cta" data-scroll-to="#plate-01">
+            <span class="cta__bg"></span>
+            <span class="cta__label">Enter the gallery</span>
+            <svg class="cta__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.25" fill="none" stroke-linecap="square" stroke-linejoin="miter"/></svg>
+          </button>
+          <a class="cta cta--ghost" href="#contact">Commission a shoot</a>
+        </div>
+      </div>
+
+      <div class="hero__scroll-hint">
+        <span>Scroll</span>
+        <div class="scroll-hint__line"><i></i></div>
+      </div>
+    </section>
+
+    <!-- EXHIBITION PLATES ──────────────────────────────────────────
+         9 categories. Each is a full-viewport "plate" that animates
+         in on scroll. Markup is repeated but data-attributes drive
+         everything (image, number, name, count, blurb).
+         ──────────────────────────────────────────────────────────── -->
+
+    <section class="plate" id="plate-01" data-scroll-section data-plate="01" data-cat="lifestyle">
+      <div class="plate__num"><span>01</span><i>/09</i></div>
+      <figure class="plate__figure" data-zoom>
+        <img loading="lazy" decoding="async"
+          src="https://images.unsplash.com/photo-1490723286627-4b66e6b2882a?w=2000&amp;q=85&amp;auto=format&amp;fit=crop"
+          alt="Lifestyle plate — soft morning interior" />
+      </figure>
+      <div class="plate__meta">
+        <span class="plate__cat">Lifestyle</span>
+        <h2 class="plate__title">Quiet hours, ordinary light.</h2>
+        <p class="plate__blurb">Twenty-four prints from interiors, mornings, hands, and the unhurried hours between things.</p>
+        <span class="plate__count">24 prints</span>
+      </div>
+    </section>
+
+    <section class="plate" id="plate-02" data-scroll-section data-plate="02" data-cat="people">
+      <div class="plate__num"><span>02</span><i>/09</i></div>
+      <figure class="plate__figure" data-zoom>
+        <img loading="lazy" decoding="async"
+          src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=2000&amp;q=85&amp;auto=format&amp;fit=crop"
+          alt="Portrait plate — editorial study" />
+      </figure>
+      <div class="plate__meta">
+        <span class="plate__cat">People</span>
+        <h2 class="plate__title">Faces, held still.</h2>
+        <p class="plate__blurb">Editorial portraits — actors, founders, artists, strangers — composed against considered shadow.</p>
+        <span class="plate__count">31 prints</span>
+      </div>
+    </section>
+
+    <section class="plate" id="plate-03" data-scroll-section data-plate="03" data-cat="products">
+      <div class="plate__num"><span>03</span><i>/09</i></div>
+      <figure class="plate__figure" data-zoom>
+        <img loading="lazy" decoding="async"
+          src="https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=2000&amp;q=85&amp;auto=format&amp;fit=crop"
+          alt="Product plate — fragrance still life" />
+      </figure>
+      <div class="plate__meta">
+        <span class="plate__cat">Products</span>
+        <h2 class="plate__title">Objects, made luminous.</h2>
+        <p class="plate__blurb">Still life and packaging for fragrance, jewellery, electronics and small-batch goods. Light as the brief.</p>
+        <span class="plate__count">18 prints</span>
+      </div>
+    </section>
+
+    <section class="plate" id="plate-04" data-scroll-section data-plate="04" data-cat="automotive">
+      <div class="plate__num"><span>04</span><i>/09</i></div>
+      <figure class="plate__figure" data-zoom>
+        <img loading="lazy" decoding="async"
+          src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=2000&amp;q=85&amp;auto=format&amp;fit=crop"
+          alt="Automotive plate — silhouette of a car" />
+      </figure>
+      <div class="plate__meta">
+        <span class="plate__cat">Automotive</span>
+        <h2 class="plate__title">Geometry in motion.</h2>
+        <p class="plate__blurb">Campaign work for manufacturers and aftermarket houses. Reflective bodies, weighted air, late-night roads.</p>
+        <span class="plate__count">22 prints</span>
+      </div>
+    </section>
+
+    <section class="plate" id="plate-05" data-scroll-section data-plate="05" data-cat="commercial">
+      <div class="plate__num"><span>05</span><i>/09</i></div>
+      <figure class="plate__figure" data-zoom>
+        <img loading="lazy" decoding="async"
+          src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=2000&amp;q=85&amp;auto=format&amp;fit=crop"
+          alt="Commercial plate — fashion editorial" />
+      </figure>
+      <div class="plate__meta">
+        <span class="plate__cat">Commercial</span>
+        <h2 class="plate__title">Campaigns with a point of view.</h2>
+        <p class="plate__blurb">Long-form collaborations with fashion houses, agencies, and creative directors who refuse the obvious.</p>
+        <span class="plate__count">27 prints</span>
+      </div>
+    </section>
+
+    <section class="plate" id="plate-06" data-scroll-section data-plate="06" data-cat="food">
+      <div class="plate__num"><span>06</span><i>/09</i></div>
+      <figure class="plate__figure" data-zoom>
+        <img loading="lazy" decoding="async"
+          src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=2000&amp;q=85&amp;auto=format&amp;fit=crop"
+          alt="Food and drink plate — dark dining" />
+      </figure>
+      <div class="plate__meta">
+        <span class="plate__cat">Food &amp; Drink</span>
+        <h2 class="plate__title">Plates, poured and lit.</h2>
+        <p class="plate__blurb">Menus, cookbooks, and label work for chefs and distillers — chiaroscuro on the table.</p>
+        <span class="plate__count">19 prints</span>
+      </div>
+    </section>
+
+    <section class="plate" id="plate-07" data-scroll-section data-plate="07" data-cat="hospitality">
+      <div class="plate__num"><span>07</span><i>/09</i></div>
+      <figure class="plate__figure" data-zoom>
+        <img loading="lazy" decoding="async"
+          src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=2000&amp;q=85&amp;auto=format&amp;fit=crop"
+          alt="Hospitality plate — boutique hotel interior" />
+      </figure>
+      <div class="plate__meta">
+        <span class="plate__cat">Restaurants &amp; Hotels</span>
+        <h2 class="plate__title">Rooms that hold the light.</h2>
+        <p class="plate__blurb">Hospitality stories for boutique hotels, dining rooms and atmosphere-led brands worldwide.</p>
+        <span class="plate__count">26 prints</span>
+      </div>
+    </section>
+
+    <section class="plate" id="plate-08" data-scroll-section data-plate="08" data-cat="travel">
+      <div class="plate__num"><span>08</span><i>/09</i></div>
+      <figure class="plate__figure" data-zoom>
+        <img loading="lazy" decoding="async"
+          src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=2000&amp;q=85&amp;auto=format&amp;fit=crop"
+          alt="Travel plate — moody coastline" />
+      </figure>
+      <div class="plate__meta">
+        <span class="plate__cat">Travel</span>
+        <h2 class="plate__title">Elsewhere, on assignment.</h2>
+        <p class="plate__blurb">Field work from coastal Italy, the High Atlas, Japan in the off-season, and stops in between.</p>
+        <span class="plate__count">34 prints</span>
+      </div>
+    </section>
+
+    <section class="plate" id="plate-09" data-scroll-section data-plate="09" data-cat="artwork">
+      <div class="plate__num"><span>09</span><i>/09</i></div>
+      <figure class="plate__figure" data-zoom>
+        <img loading="lazy" decoding="async"
+          src="https://images.unsplash.com/photo-1549887534-1541e9326642?w=2000&amp;q=85&amp;auto=format&amp;fit=crop"
+          alt="Artwork plate — abstract composition" />
+      </figure>
+      <div class="plate__meta">
+        <span class="plate__cat">Artwork</span>
+        <h2 class="plate__title">Limited editions.</h2>
+        <p class="plate__blurb">Self-initiated prints, occasional exhibitions, and one-off works. Available on request.</p>
+        <span class="plate__count">12 prints</span>
+      </div>
+    </section>
+
+    <!-- COLOPHON / CONTACT ──────────────────────────────────────── -->
+    <section class="colophon" id="contact" data-scroll-section>
+      <div class="colophon__inner">
+        <div class="colophon__eyebrow">
+          <span class="dot"></span>
+          <span>End of exhibition</span>
+        </div>
+
+        <h2 class="colophon__title">
+          <span class="line"><span class="line__inner">Bring a story.</span></span>
+          <span class="line"><span class="line__inner"><em>We'll give it</em></span></span>
+          <span class="line"><span class="line__inner">the light it needs.</span></span>
+        </h2>
+
+        <div class="colophon__grid">
+          <div>
+            <span class="colophon__label">Commissions</span>
+            <a class="colophon__link" href="mailto:studio@dayastudios.com">studio@dayastudios.com</a>
+          </div>
+          <div>
+            <span class="colophon__label">Studio</span>
+            <p>Beirut · Milan · on assignment worldwide</p>
+          </div>
+          <div>
+            <span class="colophon__label">Index</span>
+            <p>@dayastudios &nbsp;·&nbsp; Behance &nbsp;·&nbsp; Are.na</p>
+          </div>
+          <div>
+            <span class="colophon__label">Listed by</span>
+            <p>Lürzer's Archive · IdN · It's Nice That</p>
+          </div>
+        </div>
+
+        <div class="colophon__signature">
+          <span>© Daya Studios MMXXV</span>
+          <span class="dim">·</span>
+          <span>All works exhibited are the property of the studio.</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ────────────────────────────────────────────────────────────────
+       INDEX OVERLAY  ·  The curated "exhibition menu"
+       Triggered by top-right "Index". Not a navbar — a catalog.
+       ──────────────────────────────────────────────────────────────── -->
+  <nav class="index-overlay" id="index-overlay" aria-hidden="true">
+    <div class="index-overlay__veil"></div>
+    <div class="index-overlay__inner">
+      <header class="index-overlay__head">
+        <span class="index-overlay__eyebrow">Catalog of plates · 2025</span>
+        <button class="index-overlay__close" id="index-close" aria-label="Close index">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.25" fill="none" stroke-linecap="square"/></svg>
+        </button>
+      </header>
+
+      <ol class="index-list">
+        <li class="index-list__item" data-target="#plate-01">
+          <span class="idx__num">01</span>
+          <span class="idx__name">Lifestyle</span>
+          <span class="idx__rule"></span>
+          <span class="idx__count">24 prints</span>
+          <span class="idx__peek"><img src="https://images.unsplash.com/photo-1490723286627-4b66e6b2882a?w=400&amp;q=70&amp;auto=format&amp;fit=crop" alt="" loading="lazy" /></span>
+        </li>
+        <li class="index-list__item" data-target="#plate-02">
+          <span class="idx__num">02</span>
+          <span class="idx__name">People</span>
+          <span class="idx__rule"></span>
+          <span class="idx__count">31 prints</span>
+          <span class="idx__peek"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&amp;q=70&amp;auto=format&amp;fit=crop" alt="" loading="lazy" /></span>
+        </li>
+        <li class="index-list__item" data-target="#plate-03">
+          <span class="idx__num">03</span>
+          <span class="idx__name">Products</span>
+          <span class="idx__rule"></span>
+          <span class="idx__count">18 prints</span>
+          <span class="idx__peek"><img src="https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=400&amp;q=70&amp;auto=format&amp;fit=crop" alt="" loading="lazy" /></span>
+        </li>
+        <li class="index-list__item" data-target="#plate-04">
+          <span class="idx__num">04</span>
+          <span class="idx__name">Automotive</span>
+          <span class="idx__rule"></span>
+          <span class="idx__count">22 prints</span>
+          <span class="idx__peek"><img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&amp;q=70&amp;auto=format&amp;fit=crop" alt="" loading="lazy" /></span>
+        </li>
+        <li class="index-list__item" data-target="#plate-05">
+          <span class="idx__num">05</span>
+          <span class="idx__name">Commercial</span>
+          <span class="idx__rule"></span>
+          <span class="idx__count">27 prints</span>
+          <span class="idx__peek"><img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&amp;q=70&amp;auto=format&amp;fit=crop" alt="" loading="lazy" /></span>
+        </li>
+        <li class="index-list__item" data-target="#plate-06">
+          <span class="idx__num">06</span>
+          <span class="idx__name">Food &amp; Drink</span>
+          <span class="idx__rule"></span>
+          <span class="idx__count">19 prints</span>
+          <span class="idx__peek"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&amp;q=70&amp;auto=format&amp;fit=crop" alt="" loading="lazy" /></span>
+        </li>
+        <li class="index-list__item" data-target="#plate-07">
+          <span class="idx__num">07</span>
+          <span class="idx__name">Restaurants &amp; Hotels</span>
+          <span class="idx__rule"></span>
+          <span class="idx__count">26 prints</span>
+          <span class="idx__peek"><img src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=400&amp;q=70&amp;auto=format&amp;fit=crop" alt="" loading="lazy" /></span>
+        </li>
+        <li class="index-list__item" data-target="#plate-08">
+          <span class="idx__num">08</span>
+          <span class="idx__name">Travel</span>
+          <span class="idx__rule"></span>
+          <span class="idx__count">34 prints</span>
+          <span class="idx__peek"><img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400&amp;q=70&amp;auto=format&amp;fit=crop" alt="" loading="lazy" /></span>
+        </li>
+        <li class="index-list__item" data-target="#plate-09">
+          <span class="idx__num">09</span>
+          <span class="idx__name">Artwork</span>
+          <span class="idx__rule"></span>
+          <span class="idx__count">12 prints</span>
+          <span class="idx__peek"><img src="https://images.unsplash.com/photo-1549887534-1541e9326642?w=400&amp;q=70&amp;auto=format&amp;fit=crop" alt="" loading="lazy" /></span>
+        </li>
+      </ol>
+
+      <footer class="index-overlay__foot">
+        <span>Press <kbd>Esc</kbd> to close</span>
+        <span class="dim">·</span>
+        <span>Use ↑ ↓ to step through plates</span>
+      </footer>
+    </div>
+  </nav>
+
+  <!-- ────────────────────────────────────────────────────────────────
+       VENDOR + APP SCRIPTS
+       ──────────────────────────────────────────────────────────────── -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+    }
+  }
+  </script>
+
+  <script src="assets/js/preloader.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script type="module" src="assets/js/three-scene.js"></script>
+</body>
+</html>
