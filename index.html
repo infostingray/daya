@@ -32,36 +32,11 @@
     <div class="preloader__leak" aria-hidden="true"></div>
     <div class="preloader__leak preloader__leak--alt" aria-hidden="true"></div>
 
-    <!-- D-mark (echoes the logo): outline draws, orange dot scales in -->
-    <svg class="preloader__mark" viewBox="-100 -100 200 200" aria-hidden="true">
-      <defs>
-        <radialGradient id="dotGlow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%"  stop-color="#fb7f40" stop-opacity="0.65" />
-          <stop offset="60%" stop-color="#fb7f40" stop-opacity="0" />
-        </radialGradient>
-      </defs>
-      <!-- Soft glow halo behind the dot -->
-      <circle id="preloader-d-halo" cx="-22" cy="36" r="60" fill="url(#dotGlow)" />
-      <!-- The D outline: straight left spine, curved right bowl -->
-      <path id="preloader-d-path"
-            d="M -64 -78 L -64 78 L -4 78 Q 64 78 64 0 Q 64 -78 -4 -78 Z"
-            fill="none"
-            stroke="#ffffff"
-            stroke-width="6"
-            stroke-linejoin="round"
-            stroke-linecap="round" />
-      <!-- Orange dot inside the bowl (lower-left of the D's interior) -->
-      <circle id="preloader-d-dot" cx="-22" cy="36" r="22" fill="#fb7f40" />
-      <!-- Registered ® mark at the top-right corner of the D -->
-      <g id="preloader-d-reg" transform="translate(72, -82)">
-        <circle r="10" fill="none" stroke="#fb7f40" stroke-width="2" />
-        <text x="0" y="3.5" text-anchor="middle"
-              font-family="IBM Plex Mono, monospace"
-              font-size="11"
-              font-weight="500"
-              fill="#fb7f40">R</text>
-      </g>
-    </svg>
+    <!-- D-mark (cropped directly from the brand logo) -->
+    <div class="preloader__mark" aria-hidden="true">
+      <img id="preloader-d-img" src="assets/img/d-mark.png" alt="" />
+      <div class="preloader__mark-halo"></div>
+    </div>
 
     <div class="preloader__meta">
       <div class="preloader__rule"></div>
@@ -99,7 +74,8 @@
        ──────────────────────────────────────────────────────────────── -->
   <header class="chrome chrome--top">
     <a href="#" class="chrome__brand" aria-label="Daya Studios — home">
-      <img class="brand__logo" src="assets/img/logo.png" alt="Daya Studios" />
+      <img class="brand__logo brand__logo--dark"  src="assets/img/logo.png"       alt="Daya Studios" />
+      <img class="brand__logo brand__logo--light" src="assets/img/logo-light.png" alt="" aria-hidden="true" />
     </a>
 
     <button class="chrome__nav-trigger" id="nav-trigger" aria-controls="index-overlay" aria-expanded="false">
