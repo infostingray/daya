@@ -36,6 +36,11 @@
     <div class="preloader__mark" aria-hidden="true">
       <img id="preloader-d-img" src="assets/img/d-mark.png" alt="" />
       <div class="preloader__mark-halo"></div>
+      <!-- Horizontal scan line sweeps top→bottom as the D develops -->
+      <div class="preloader__mark-scan"></div>
+      <!-- Two split halves slide together for the initial assembly -->
+      <div class="preloader__mark-split preloader__mark-split--left"></div>
+      <div class="preloader__mark-split preloader__mark-split--right"></div>
     </div>
 
     <div class="preloader__meta">
@@ -79,7 +84,7 @@
     </a>
 
     <button class="chrome__nav-trigger" id="nav-trigger" aria-controls="index-overlay" aria-expanded="false">
-      <span class="nav-trigger__label">Index</span>
+      <span class="nav-trigger__label">Frames</span>
       <span class="nav-trigger__lines" aria-hidden="true"><i></i><i></i><i></i></span>
     </button>
   </header>
@@ -161,13 +166,34 @@
         </div>
       </div>
 
-      <!-- Slide counter + progress bar -->
-      <div class="hero__reel-meta" aria-hidden="true">
-        <span class="reel__counter">
-          <span data-current-slide>01</span><span class="dim">/</span><span data-total-slides>05</span>
-        </span>
-        <div class="reel__progress"><i id="reel-progress"></i></div>
-      </div>
+      <!-- Clickable category chips · hover previews slide, click scrolls to plate -->
+      <nav class="hero__chips" id="hero-chips" aria-label="Categories">
+        <button class="chip is-active" data-slide-index="0" data-cat-link="#plate-01">
+          <span class="chip__num">01</span>
+          <span class="chip__name">Lifestyle</span>
+          <i class="chip__progress"></i>
+        </button>
+        <button class="chip" data-slide-index="1" data-cat-link="#plate-03">
+          <span class="chip__num">03</span>
+          <span class="chip__name">Products</span>
+          <i class="chip__progress"></i>
+        </button>
+        <button class="chip" data-slide-index="2" data-cat-link="#plate-06">
+          <span class="chip__num">06</span>
+          <span class="chip__name">Food</span>
+          <i class="chip__progress"></i>
+        </button>
+        <button class="chip" data-slide-index="3" data-cat-link="#plate-07">
+          <span class="chip__num">07</span>
+          <span class="chip__name">Hotels</span>
+          <i class="chip__progress"></i>
+        </button>
+        <button class="chip" data-slide-index="4" data-cat-link="#plate-04">
+          <span class="chip__num">04</span>
+          <span class="chip__name">Automotive</span>
+          <i class="chip__progress"></i>
+        </button>
+      </nav>
 
       <div class="hero__scroll-hint">
         <span>Scroll</span>
@@ -387,7 +413,7 @@
                 <p>Lebanon · KSA · on assignment worldwide</p>
               </div>
               <div>
-                <span class="colophon__label">Index</span>
+                <span class="colophon__label">Follow</span>
                 <p>@dayastudios &nbsp;·&nbsp; Behance &nbsp;·&nbsp; Are.na</p>
               </div>
               <div>
@@ -546,8 +572,8 @@
     <div class="index-overlay__veil"></div>
     <div class="index-overlay__inner">
       <header class="index-overlay__head">
-        <span class="index-overlay__eyebrow">Catalog of plates · 2025</span>
-        <button class="index-overlay__close" id="index-close" aria-label="Close index">
+        <span class="index-overlay__eyebrow">The frames · A catalogue of plates</span>
+        <button class="index-overlay__close" id="index-close" aria-label="Close frames">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.25" fill="none" stroke-linecap="square"/></svg>
         </button>
       </header>
