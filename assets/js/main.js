@@ -129,7 +129,10 @@
       chip.addEventListener('click', (e) => {
         e.preventDefault();
         const target = chip.getAttribute('data-cat-link');
-        if (target) scrollTo(target);
+        if (!target) return;
+        // Support both URL navigation (category pages) and on-page scroll anchors
+        if (target.startsWith('#')) scrollTo(target);
+        else window.location.href = target;
       });
     });
 
@@ -298,9 +301,10 @@
 
     items.forEach((item) => {
       item.addEventListener('click', () => {
-        const target = item.getAttribute('data-target');
+        const href = item.getAttribute('data-href');
+        if (!href) return;
         close();
-        setTimeout(() => scrollTo(target), 380);
+        setTimeout(() => { window.location.href = href; }, 220);
       });
     });
 
@@ -455,23 +459,23 @@
   }
 
   /* ─────────────────────────────────────────────────────────────────
-     CLIENTS SECTION · reveal trigger for the title's mask animation
+     SECTION REVEALS · clients + gallery mosaic mask-reveal on entry
      ───────────────────────────────────────────────────────────────── */
   function initClientsReveal() {
-    const section = document.querySelector('.clients');
-    if (!section) return;
+    const sections = document.querySelectorAll('.clients, .gallery');
+    if (!sections.length) return;
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            section.classList.add('is-revealed');
-            observer.disconnect();
+            entry.target.classList.add('is-revealed');
+            observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.15 }
     );
-    observer.observe(section);
+    sections.forEach((s) => observer.observe(s));
   }
 
 })();
