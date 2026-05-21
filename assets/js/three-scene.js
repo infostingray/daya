@@ -56,7 +56,7 @@ function initDust(canvas) {
 
   const material = new THREE.PointsMaterial({
     map: tex,
-    color: 0xf0b87c,         // warm amber
+    color: 0xfb7f40,         // warm amber
     size: 0.18,
     sizeAttenuation: true,
     transparent: true,
@@ -115,9 +115,9 @@ function makeSpriteTexture() {
   c.width = c.height = 64;
   const g = c.getContext('2d');
   const grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
-  grad.addColorStop(0.0, 'rgba(255, 220, 180, 1)');
-  grad.addColorStop(0.3, 'rgba(240, 184, 124, 0.6)');
-  grad.addColorStop(0.7, 'rgba(212, 165, 116, 0.1)');
+  grad.addColorStop(0.0, 'rgba(255, 200, 140, 1)');
+  grad.addColorStop(0.3, 'rgba(251, 127, 64, 0.65)');
+  grad.addColorStop(0.7, 'rgba(0, 50, 129, 0.12)');
   grad.addColorStop(1.0, 'rgba(0, 0, 0, 0)');
   g.fillStyle = grad;
   g.fillRect(0, 0, 64, 64);
