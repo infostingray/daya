@@ -78,34 +78,59 @@
     const slides = Array.from(reel.querySelectorAll('.reel__slide'));
     if (slides.length === 0) return;
 
-    const currentEl = document.querySelector('[data-current-slide]');
-    const totalEl   = document.querySelector('[data-total-slides]');
-    const catEl     = document.querySelector('[data-current-cat]');
-    const progress  = document.getElementById('reel-progress');
+    const chips = Array.from(document.querySelectorAll('#hero-chips .chip'));
+    const catEl = document.querySelector('[data-current-cat]');
 
     const ROTATE_MS = 5500;
-    if (totalEl) totalEl.textContent = String(slides.length).padStart(2, '0');
-
     let index = 0;
-    function update() {
-      slides.forEach((s, i) => s.classList.toggle('is-active', i === index));
-      if (currentEl) currentEl.textContent = String(index + 1).padStart(2, '0');
+    let timerId = null;
+    let paused = false;
+
+    function setSlide(i) {
+      index = ((i % slides.length) + slides.length) % slides.length;
+      slides.forEach((s, k) => s.classList.toggle('is-active', k === index));
+      chips.forEach((c, k) => c.classList.toggle('is-active', k === index));
       if (catEl) {
         const cat = slides[index].getAttribute('data-cat');
         if (cat) catEl.textContent = cat;
       }
-      if (progress) {
-        progress.classList.remove('is-running');
-        // Force reflow so the next class toggle re-runs the transition
-        void progress.offsetWidth;
-        progress.classList.add('is-running');
-      }
     }
-    update();
-    setInterval(() => {
-      index = (index + 1) % slides.length;
-      update();
-    }, ROTATE_MS);
+
+    function tick() {
+      if (paused) return;
+      setSlide(index + 1);
+    }
+
+    function startTimer() {
+      stopTimer();
+      timerId = setInterval(tick, ROTATE_MS);
+    }
+    function stopTimer() {
+      if (timerId) { clearInterval(timerId); timerId = null; }
+    }
+
+    // Chip interactions: hover previews, click jumps to plate
+    chips.forEach((chip, k) => {
+      chip.addEventListener('mouseenter', () => {
+        paused = true;
+        stopTimer();
+        setSlide(k);
+      });
+      chip.addEventListener('mouseleave', () => {
+        paused = false;
+        startTimer();
+      });
+      chip.addEventListener('focus', () => { paused = true; stopTimer(); setSlide(k); });
+      chip.addEventListener('blur',  () => { paused = false; startTimer(); });
+      chip.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = chip.getAttribute('data-cat-link');
+        if (target) scrollTo(target);
+      });
+    });
+
+    setSlide(0);
+    startTimer();
   }
 
   /* ─────────────────────────────────────────────────────────────────
