@@ -118,17 +118,20 @@
        ──────────────────────────────────────────────────────────────── -->
   <main id="scroll-root" data-scroll-container>
 
-    <!-- HERO ─────────────────────────────────────────────────────── -->
+    <!-- HERO BANNER ────────────────────────────────────────────── -->
     <section class="hero" data-scroll-section data-plate="00">
-      <figure class="hero__plate">
+      <figure class="hero__banner">
         <img
           class="hero__img"
           src="assets/img/plates/00-hero.jpg"
-          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=2400&amp;q=85&amp;auto=format&amp;fit=crop';"
+          onerror="this.onerror=null;this.src='https://cdn.myportfolio.com/f4536420-5f83-4a91-a9dd-0ebca5a68191/bf9a2dfc-5cf6-4596-85bd-cf8f9a2fbd7d_rwc_15x0x1749x656x4096.jpg?h=5537973e774b3153d34ee584ea8d4463';"
           alt="Daya Studios — opening plate"
           fetchpriority="high"
         />
-        <div class="hero__veil"></div>
+        <div class="hero__scrim"></div>
+        <div class="hero__banner-meta">
+          <span class="hero__banner-tag">DAYA STUDIOS &nbsp;·&nbsp; PHOTOGRAPHY &nbsp;·&nbsp; MMXXV</span>
+        </div>
       </figure>
 
       <div class="hero__copy">
@@ -154,7 +157,7 @@
             <span class="cta__label">Enter the gallery</span>
             <svg class="cta__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.25" fill="none" stroke-linecap="square" stroke-linejoin="miter"/></svg>
           </button>
-          <a class="cta cta--ghost" href="#contact">Commission a shoot</a>
+          <a class="cta cta--ghost" href="#contact">Book a shoot</a>
         </div>
       </div>
 
@@ -310,12 +313,51 @@
       </div>
     </section>
 
-    <!-- COLOPHON / CONTACT ──────────────────────────────────────── -->
+    <!-- CLIENTS ─────────────────────────────────────────────────────
+         Logo wall. Placeholders below are styled boxes — drop real
+         client logos into assets/img/clients/ named client-01.png
+         through client-12.png and the JS will swap them in.
+         ────────────────────────────────────────────────────────────── -->
+    <section class="clients" id="clients" data-scroll-section>
+      <div class="clients__inner">
+        <div class="clients__head">
+          <div class="clients__eyebrow">
+            <span class="dot"></span>
+            <span>Selected partners</span>
+          </div>
+          <h2 class="clients__title">
+            <span class="line"><span class="line__inner">In good</span></span>
+            <span class="line"><span class="line__inner"><em>company.</em></span></span>
+          </h2>
+          <p class="clients__lede">
+            A decade of collaboration with houses, hotels, manufacturers and editorial titles
+            who let the work speak.
+          </p>
+        </div>
+
+        <ul class="clients__grid" aria-label="Client logos">
+          <li class="client"><span class="client__placeholder">CLIENT 01</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 02</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 03</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 04</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 05</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 06</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 07</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 08</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 09</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 10</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 11</span></li>
+          <li class="client"><span class="client__placeholder">CLIENT 12</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- COLOPHON / CONTACT + BOOKING FORM ───────────────────────── -->
     <section class="colophon" id="contact" data-scroll-section>
       <div class="colophon__inner">
         <div class="colophon__eyebrow">
           <span class="dot"></span>
-          <span>End of exhibition</span>
+          <span>End of exhibition · Begin a project</span>
         </div>
 
         <h2 class="colophon__title">
@@ -324,23 +366,119 @@
           <span class="line"><span class="line__inner">the light it needs.</span></span>
         </h2>
 
-        <div class="colophon__grid">
-          <div>
-            <span class="colophon__label">Commissions</span>
-            <a class="colophon__link" href="mailto:studio@dayastudios.com">studio@dayastudios.com</a>
+        <div class="colophon__layout">
+          <!-- Left column: studio facts -->
+          <div class="colophon__facts">
+            <div class="colophon__grid">
+              <div>
+                <span class="colophon__label">Bookings</span>
+                <a class="colophon__link" href="mailto:studio@dayastudios.com">studio@dayastudios.com</a>
+              </div>
+              <div>
+                <span class="colophon__label">Studio</span>
+                <p>Beirut · Milan · on assignment worldwide</p>
+              </div>
+              <div>
+                <span class="colophon__label">Index</span>
+                <p>@dayastudios &nbsp;·&nbsp; Behance &nbsp;·&nbsp; Are.na</p>
+              </div>
+              <div>
+                <span class="colophon__label">Listed by</span>
+                <p>Lürzer's Archive · IdN · It's Nice That</p>
+              </div>
+            </div>
           </div>
-          <div>
-            <span class="colophon__label">Studio</span>
-            <p>Beirut · Milan · on assignment worldwide</p>
-          </div>
-          <div>
-            <span class="colophon__label">Index</span>
-            <p>@dayastudios &nbsp;·&nbsp; Behance &nbsp;·&nbsp; Are.na</p>
-          </div>
-          <div>
-            <span class="colophon__label">Listed by</span>
-            <p>Lürzer's Archive · IdN · It's Nice That</p>
-          </div>
+
+          <!-- Right column: booking form -->
+          <form class="booking" id="booking-form" novalidate>
+            <div class="booking__head">
+              <span class="booking__eyebrow">Book a shoot</span>
+              <span class="booking__status" id="booking-status" aria-live="polite"></span>
+            </div>
+
+            <div class="booking__row">
+              <label class="field">
+                <span class="field__label">Name</span>
+                <input class="field__input" type="text" name="name" required autocomplete="name" />
+              </label>
+              <label class="field">
+                <span class="field__label">Email</span>
+                <input class="field__input" type="email" name="email" required autocomplete="email" />
+              </label>
+            </div>
+
+            <div class="booking__row">
+              <label class="field">
+                <span class="field__label">Phone (optional)</span>
+                <input class="field__input" type="tel" name="phone" autocomplete="tel" />
+              </label>
+              <label class="field">
+                <span class="field__label">Project type</span>
+                <select class="field__input field__select" name="project">
+                  <option value="" disabled selected>Select a category…</option>
+                  <option>Lifestyle</option>
+                  <option>People / Portraits</option>
+                  <option>Products</option>
+                  <option>Automotive</option>
+                  <option>Commercial</option>
+                  <option>Food &amp; Drink</option>
+                  <option>Restaurants &amp; Hotels</option>
+                  <option>Travel</option>
+                  <option>Artwork</option>
+                  <option>Other</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="booking__row">
+              <label class="field">
+                <span class="field__label">Preferred date</span>
+                <input class="field__input" type="date" name="date" />
+              </label>
+              <div class="field">
+                <span class="field__label">Time slot</span>
+                <div class="slot-group" role="radiogroup" aria-label="Preferred time slot">
+                  <label class="slot">
+                    <input type="radio" name="slot" value="Morning (9 AM – 12 PM)" />
+                    <span class="slot__pill">
+                      <span class="slot__name">Morning</span>
+                      <span class="slot__time">9 – 12</span>
+                    </span>
+                  </label>
+                  <label class="slot">
+                    <input type="radio" name="slot" value="Afternoon (1 PM – 5 PM)" />
+                    <span class="slot__pill">
+                      <span class="slot__name">Afternoon</span>
+                      <span class="slot__time">1 – 5</span>
+                    </span>
+                  </label>
+                  <label class="slot">
+                    <input type="radio" name="slot" value="Evening (5 PM – 8 PM)" />
+                    <span class="slot__pill">
+                      <span class="slot__name">Evening</span>
+                      <span class="slot__time">5 – 8</span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <label class="field">
+              <span class="field__label">Brief / message</span>
+              <textarea class="field__input field__textarea" name="message" rows="4"
+                placeholder="Tell us about the project, deliverables, references…"></textarea>
+            </label>
+
+            <button class="cta booking__submit" type="submit">
+              <span class="cta__bg"></span>
+              <span class="cta__label">Send booking request</span>
+              <svg class="cta__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.25" fill="none" stroke-linecap="square" stroke-linejoin="miter"/></svg>
+            </button>
+
+            <p class="booking__note">
+              Submitting opens your email app with the request pre-filled. We reply within one working day.
+            </p>
+          </form>
         </div>
 
         <div class="colophon__signature">
