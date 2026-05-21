@@ -737,7 +737,7 @@ body.hero-in-view .chrome--side-right { color: rgba(255, 255, 255, 0.72); }
     justify-content: flex-start;
     left: var(--gutter);
     right: var(--gutter);
-    bottom: clamp(140px, 22vh, 200px);
+    bottom: clamp(96px, 14vh, 130px);
     gap: 6px;
   }
   .chip { padding: 8px 12px; font-size: 10px; letter-spacing: 0.14em; gap: 6px; }
@@ -745,7 +745,7 @@ body.hero-in-view .chrome--side-right { color: rgba(255, 255, 255, 0.72); }
 @media (max-width: 768px) {
   .hero__overlay {
     padding-top: clamp(96px, 14vh, 140px);
-    padding-bottom: clamp(180px, 22vh, 220px);
+    padding-bottom: clamp(220px, 28vh, 280px);
   }
   .hero__scroll-hint span:first-child { display: none; }
 }
