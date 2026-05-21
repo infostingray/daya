@@ -22,6 +22,8 @@
     initKeyboardNav();
     initPlateCounter();
     initCTAs();
+    initBookingForm();
+    initClientsReveal();
   }
 
   /* ─────────────────────────────────────────────────────────────────
@@ -364,4 +366,86 @@
       });
     });
   }
+  /* ─────────────────────────────────────────────────────────────────
+     BOOKING FORM · mailto submission with formatted body
+     ───────────────────────────────────────────────────────────────── */
+  function initBookingForm() {
+    const form = document.getElementById('booking-form');
+    if (!form) return;
+    const status = document.getElementById('booking-status');
+
+    const setStatus = (msg, kind) => {
+      if (!status) return;
+      status.textContent = msg;
+      status.classList.remove('is-error', 'is-success');
+      if (kind) status.classList.add('is-' + kind);
+    };
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const name    = (data.get('name')    || '').toString().trim();
+      const email   = (data.get('email')   || '').toString().trim();
+      const phone   = (data.get('phone')   || '').toString().trim();
+      const project = (data.get('project') || '').toString().trim();
+      const date    = (data.get('date')    || '').toString().trim();
+      const slot    = (data.get('slot')    || '').toString().trim();
+      const message = (data.get('message') || '').toString().trim();
+
+      if (!name || !email) {
+        setStatus('Please add your name and email.', 'error');
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setStatus('That email looks off — please check.', 'error');
+        return;
+      }
+
+      const lines = [
+        'Booking request from the website',
+        '',
+        'Name:        ' + name,
+        'Email:       ' + email,
+        'Phone:       ' + (phone || '—'),
+        'Project:     ' + (project || '—'),
+        'Date:        ' + (date || '—'),
+        'Time slot:   ' + (slot || '—'),
+        '',
+        'Brief / message:',
+        message || '(none provided)',
+        '',
+        '— Sent from dayastudios.com'
+      ];
+      const subject = 'Booking — ' + name + (project ? ' · ' + project : '');
+      const body = lines.join('\n');
+
+      const mailto = 'mailto:studio@dayastudios.com'
+        + '?subject=' + encodeURIComponent(subject)
+        + '&body=' + encodeURIComponent(body);
+
+      window.location.href = mailto;
+      setStatus('Email app opening — send to finish.', 'success');
+    });
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+     CLIENTS SECTION · reveal trigger for the title's mask animation
+     ───────────────────────────────────────────────────────────────── */
+  function initClientsReveal() {
+    const section = document.querySelector('.clients');
+    if (!section) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            section.classList.add('is-revealed');
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+    observer.observe(section);
+  }
+
 })();
