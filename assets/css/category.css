@@ -1,0 +1,291 @@
+/* ═══════════════════════════════════════════════════════════════════
+   CATEGORY PAGE STYLES
+   Inherits everything from style.css; this file only adds page-specific
+   layout for the category hero, masonry photo grid, and footer.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.category-page {
+  background: var(--paper);
+}
+
+/* ── Category hero ────────────────────────────────────────────────── */
+.cat-hero {
+  padding: clamp(120px, 18vh, 200px) var(--gutter) clamp(40px, 6vh, 72px);
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+.cat-hero__inner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.cat-hero__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding: 8px 14px 8px 8px;
+  border-radius: 999px;
+  margin-bottom: clamp(32px, 5vh, 48px);
+  transition: color 0.3s, background 0.3s, padding-left 0.3s var(--ease-out-expo);
+}
+.cat-hero__back:hover {
+  color: var(--brand-orange);
+  background: var(--brand-orange-soft);
+  padding-left: 14px;
+}
+.cat-hero__back svg { transition: transform 0.3s var(--ease-out-expo); }
+.cat-hero__back:hover svg { transform: translateX(-3px); }
+
+.cat-hero__eyebrow {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 24px;
+}
+
+.cat-hero__title {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(48px, 8vw, 140px);
+  line-height: 0.96;
+  letter-spacing: -0.035em;
+  color: var(--brand-blue);
+  margin-bottom: 24px;
+  max-width: 14ch;
+}
+
+.cat-hero__blurb {
+  font-size: clamp(15px, 1.15vw, 18px);
+  line-height: 1.55;
+  color: var(--ink-soft);
+  font-weight: 350;
+  max-width: 620px;
+}
+
+/* ── Masonry photo grid ───────────────────────────────────────────── */
+.cat-gallery {
+  padding: clamp(40px, 6vh, 72px) var(--gutter) clamp(48px, 8vh, 96px);
+  max-width: 1480px;
+  margin: 0 auto;
+}
+
+/* CSS multi-column layout gives a natural masonry effect, no JS needed */
+.photos {
+  columns: 3 320px;
+  column-gap: clamp(12px, 1.6vw, 24px);
+}
+
+.photo {
+  break-inside: avoid;
+  margin: 0 0 clamp(12px, 1.6vw, 24px);
+  position: relative;
+  background: var(--brand-blue-soft);
+  overflow: hidden;
+  border-radius: 2px;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.9s var(--ease-out-expo),
+              transform 0.9s var(--ease-out-expo);
+}
+.photo.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 1.6s var(--ease-out-expo),
+              filter 0.5s ease;
+}
+.photo:hover img {
+  transform: scale(1.04);
+}
+
+/* Per-aspect helpers (CSS columns ignore these but they're useful for hints) */
+.photo--portrait  img { aspect-ratio: 4 / 5; object-fit: cover; }
+.photo--landscape img { aspect-ratio: 3 / 2; object-fit: cover; }
+.photo--square    img { aspect-ratio: 1 / 1; object-fit: cover; }
+
+/* Caption — slides up over the bottom of the image on hover */
+.photo figcaption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: clamp(14px, 2vw, 24px) clamp(14px, 2vw, 22px);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 31, 82, 0) 0%,
+    rgba(0, 31, 82, 0.55) 50%,
+    rgba(0, 31, 82, 0.92) 100%
+  );
+  color: var(--paper);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s var(--ease-out-expo),
+              transform 0.5s var(--ease-out-expo);
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.photo:hover figcaption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.photo__client {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--brand-orange);
+}
+.photo__project {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(14px, 1.1vw, 17px);
+  color: var(--paper);
+  line-height: 1.3;
+}
+.photo__year {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* Touch devices: surface the caption always (no hover state) */
+@media (hover: none) {
+  .photo figcaption { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .photos { columns: 2 200px; column-gap: 10px; }
+  .photo { margin-bottom: 10px; }
+}
+@media (max-width: 480px) {
+  .photos { columns: 1; }
+}
+
+/* ── Previous / Next category nav ─────────────────────────────────── */
+.cat-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  margin: 0 var(--gutter);
+}
+.cat-nav__link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: clamp(28px, 4vh, 48px) clamp(20px, 3vw, 48px);
+  color: var(--ink-soft);
+  transition: background 0.4s var(--ease-out-expo), color 0.3s;
+}
+.cat-nav__link:hover {
+  background: var(--brand-orange-soft);
+  color: var(--brand-orange);
+}
+.cat-nav__link--prev { text-align: left;  border-right: 1px solid var(--rule); }
+.cat-nav__link--next { text-align: right; align-items: flex-end; }
+
+.cat-nav__label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.cat-nav__name {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(20px, 2.2vw, 32px);
+  letter-spacing: -0.02em;
+  color: var(--brand-blue);
+  transition: color 0.3s;
+}
+.cat-nav__link:hover .cat-nav__name { color: var(--brand-orange); }
+
+/* ── Mini footer ──────────────────────────────────────────────────── */
+.cat-footer {
+  padding: clamp(40px, 6vh, 72px) var(--gutter);
+  background: var(--paper-warm);
+}
+.cat-footer__inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  gap: clamp(28px, 5vh, 48px);
+}
+.cat-footer__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.cat-footer__eyebrow {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.cat-footer__line {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(22px, 2.4vw, 38px);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--brand-blue);
+  max-width: 32ch;
+}
+.cat-footer__line a {
+  color: var(--brand-blue);
+  border-bottom: 1px solid var(--brand-orange);
+  padding-bottom: 1px;
+  transition: color 0.3s;
+}
+.cat-footer__line a:hover { color: var(--brand-orange); }
+
+.cat-footer__signature {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+}
+.cat-footer__signature .colophon__credit { margin-left: auto; color: var(--ink-mute); }
+.cat-footer__signature .colophon__credit a {
+  color: var(--ink-soft);
+  border-bottom: 1px solid transparent;
+  padding-bottom: 1px;
+}
+.cat-footer__signature .colophon__credit a:hover {
+  color: var(--brand-orange);
+  border-bottom-color: var(--brand-orange);
+}
+
+@media (max-width: 600px) {
+  .cat-footer__signature .colophon__credit { margin-left: 0; width: 100%; padding-top: 6px; }
+  .cat-nav__name { font-size: 16px; }
+  .cat-nav__link { padding: 24px 18px; }
+}
