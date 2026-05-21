@@ -17,6 +17,7 @@
     initLenis();
     initHeroReveal();
     initHeroSlideshow();
+    initHeroVisibility();
     initPlateReveals();
     initIndexOverlay();
     initKeyboardNav();
@@ -105,6 +106,27 @@
       index = (index + 1) % slides.length;
       update();
     }, ROTATE_MS);
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+     HERO VISIBILITY · toggles body.hero-in-view for logo/chrome swap
+     ───────────────────────────────────────────────────────────────── */
+  function initHeroVisibility() {
+    const hero = document.querySelector('.hero');
+    if (!hero) return;
+    // Start in the hero state since the page loads at the top
+    document.body.classList.add('hero-in-view');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          // Consider hero "in view" while more than 30% of it is visible
+          document.body.classList.toggle('hero-in-view', entry.intersectionRatio > 0.3);
+        });
+      },
+      { threshold: [0, 0.3, 0.6, 1] }
+    );
+    observer.observe(hero);
   }
 
   /* ─────────────────────────────────────────────────────────────────
