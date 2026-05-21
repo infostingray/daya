@@ -1,41 +1,50 @@
 /* ═══════════════════════════════════════════════════════════════════
-   PRELOADER  ·  "Exposing the plate"
+   PRELOADER  ·  "D-mark draws"
    Sequence:
-     1. Place 8 aperture blades around the center (fully closed)
-     2. Light leaks sweep across (CSS handles this)
-     3. Counter ticks 0→100 while blades rotate open
-     4. Brief overexposure flash
-     5. Iris opens fully, preloader fades, hero focus-pulls in
+     1. Navy field with diagonal orange light leaks (CSS animated)
+     2. The D-mark outline draws itself via stroke-dashoffset
+     3. The orange dot inside the D scales in with a glow halo
+     4. Counter ticks 0→100 while phase text updates
+     5. Brief overexposure flash
+     6. Preloader fades, hero focus-pulls in
    ═══════════════════════════════════════════════════════════════════ */
 
 (function () {
   'use strict';
 
-  // ─── Position the 8 aperture blades into an iris formation ───
-  // Each blade is a triangle pointing outward; we rotate it around the
-  // origin by 45° increments and slide it toward the center on "open".
-  const blades = document.querySelectorAll('.preloader__iris .blade');
-  const BLADE_COUNT = blades.length;
-  const ANGLE_STEP = 360 / BLADE_COUNT;
+  // ─── SVG D-mark elements ───
+  const markPath = document.getElementById('preloader-d-path');
+  const markDot  = document.getElementById('preloader-d-dot');
+  const markReg  = document.getElementById('preloader-d-reg');
 
-  // Closed state: blades rotated to fully occlude the center.
-  // Open state: blades rotated outward so the center is exposed.
-  function setApertureOpenness(t) {
-    // t = 0 (closed) → 1 (open)
-    // We rotate each blade by its base angle, then add an offset that
-    // grows with t to swing the blade outward.
-    const swing = -45 * t; // degrees of additional rotation per blade
-    blades.forEach((blade, i) => {
-      const base = i * ANGLE_STEP;
-      blade.setAttribute(
-        'transform',
-        `rotate(${base + swing}) translate(${-30 + t * 28}, 0)`
-      );
-    });
+  let pathLength = 0;
+  if (markPath && typeof markPath.getTotalLength === 'function') {
+    pathLength = markPath.getTotalLength();
+    markPath.style.strokeDasharray  = pathLength;
+    markPath.style.strokeDashoffset = pathLength;
   }
 
-  // Start nearly closed (a sliver open so the warm glow shows through)
-  setApertureOpenness(0.05);
+  // Drive the D-mark in lockstep with the counter:
+  //   t = 0   → outline invisible, dot hidden
+  //   t = 0.55 → outline fully drawn
+  //   t = 0.75 → orange dot fades + scales in
+  //   t = 0.90 → registered mark fades in
+  function setMarkProgress(t) {
+    if (markPath && pathLength) {
+      const drawT = Math.min(1, t / 0.55);
+      markPath.style.strokeDashoffset = pathLength * (1 - drawT);
+    }
+    if (markDot) {
+      const dotT = Math.min(1, Math.max(0, (t - 0.55) / 0.20));
+      markDot.style.opacity   = dotT;
+      markDot.style.transform = 'scale(' + (0.4 + dotT * 0.6) + ')';
+    }
+    if (markReg) {
+      const regT = Math.min(1, Math.max(0, (t - 0.75) / 0.20));
+      markReg.style.opacity = regT;
+    }
+  }
+  setMarkProgress(0);
 
   // ─── Counter + phase text ───
   const pctEl = document.getElementById('preloader-pct');
@@ -43,49 +52,48 @@
   const preloader = document.getElementById('preloader');
 
   const PHASES = [
-    { upTo: 25,  label: 'EXPOSING THE PLATE' },
-    { upTo: 55,  label: 'DEVELOPING' },
-    { upTo: 85,  label: 'FIXING THE IMAGE' },
-    { upTo: 100, label: 'READY · DRY TO TOUCH' },
+    { upTo: 25,  label: 'PREPARING THE STUDIO' },
+    { upTo: 55,  label: 'CALIBRATING THE LENS' },
+    { upTo: 85,  label: 'COMPOSING THE FRAME' },
+    { upTo: 100, label: 'READY' },
   ];
 
-  // ─── Resource awareness ───
-  // We wait for the hero image to actually decode before completing,
-  // so the iris doesn't open onto a blank or half-loaded plate.
-  const heroImg = document.querySelector('.hero__img');
+  // ─── Wait for any hero slide image to decode before completing ───
+  // (hero has multiple slides; first one is the active one we need)
+  const heroImg =
+    document.querySelector('.reel__slide.is-active img') ||
+    document.querySelector('.hero__img') ||
+    document.querySelector('.hero img');
   let heroReady = false;
   if (heroImg) {
     if (heroImg.complete && heroImg.naturalWidth > 0) {
       heroReady = true;
     } else {
-      heroImg.addEventListener('load', () => { heroReady = true; }, { once: true });
-      heroImg.addEventListener('error', () => { heroReady = true; }, { once: true }); // don't block forever
+      heroImg.addEventListener('load',  () => { heroReady = true; }, { once: true });
+      heroImg.addEventListener('error', () => { heroReady = true; }, { once: true });
     }
   } else {
     heroReady = true;
   }
 
   // ─── Run the sequence ───
-  const TOTAL = 3400;       // ms of the visible exposure animation
+  const TOTAL = 3400; // ms of the visible animation
   const start = performance.now();
 
   function tick(now) {
     const elapsed = now - start;
     const linear = Math.min(1, elapsed / TOTAL);
 
-    // Ease the counter so it feels mechanical-but-organic
-    // (cubic ease-out with a tiny stutter near 70% for "developing")
+    // Ease the counter (cubic out with a tiny stutter near 70%)
     const eased = easeOutCubic(linear);
     const stutter = linear > 0.65 && linear < 0.72 ? -0.02 : 0;
     const pct = Math.max(0, Math.min(100, Math.round((eased + stutter) * 100)));
 
-    // Update DOM
-    pctEl.textContent = String(pct).padStart(3, '0');
-    const phase = PHASES.find(p => pct <= p.upTo) || PHASES[PHASES.length - 1];
-    if (phaseEl.textContent !== phase.label) phaseEl.textContent = phase.label;
+    if (pctEl) pctEl.textContent = String(pct).padStart(3, '0');
+    const phase = PHASES.find((p) => pct <= p.upTo) || PHASES[PHASES.length - 1];
+    if (phaseEl && phaseEl.textContent !== phase.label) phaseEl.textContent = phase.label;
 
-    // Aperture opens with the counter
-    setApertureOpenness(eased);
+    setMarkProgress(eased);
 
     if (linear < 1 || !heroReady) {
       requestAnimationFrame(tick);
@@ -94,32 +102,21 @@
     }
   }
 
-  function easeOutCubic(x) {
-    return 1 - Math.pow(1 - x, 3);
-  }
+  function easeOutCubic(x) { return 1 - Math.pow(1 - x, 3); }
 
   // ─── Finish + hand off to main.js via custom event ───
   function finishPreloader() {
-    // Brief overexposure flash
     const flash = document.createElement('div');
-    flash.style.cssText = `
-      position: fixed; inset: 0; background: var(--paper);
-      z-index: 9998; opacity: 0; pointer-events: none;
-      transition: opacity 0.18s ease-out;
-    `;
+    flash.style.cssText =
+      'position:fixed;inset:0;background:#ffffff;z-index:9998;' +
+      'opacity:0;pointer-events:none;transition:opacity 0.18s ease-out;';
     document.body.appendChild(flash);
 
-    requestAnimationFrame(() => { flash.style.opacity = '0.85'; });
+    requestAnimationFrame(() => { flash.style.opacity = '0.92'; });
 
     setTimeout(() => {
       flash.style.opacity = '0';
       preloader.classList.add('is-done');
-
-      // Focus pull on hero — release the initial scale and brightness
-      if (heroImg) {
-        heroImg.style.transform = 'scale(1)';
-        heroImg.style.filter = 'brightness(0.6) contrast(1.05) saturate(0.95)';
-      }
 
       // Tell main.js the show can start
       window.dispatchEvent(new CustomEvent('preloader:done'));
@@ -128,10 +125,9 @@
     }, 180);
   }
 
-  // Kick off
   requestAnimationFrame(tick);
 
-  // Safety net: never trap the user behind the preloader
+  // Safety net — never trap the user behind the preloader
   setTimeout(() => {
     if (!preloader.classList.contains('is-done')) {
       heroReady = true;

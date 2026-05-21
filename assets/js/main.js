@@ -15,8 +15,8 @@
 
   function boot() {
     initLenis();
-    initCursorAndFlare();
     initHeroReveal();
+    initHeroSlideshow();
     initPlateReveals();
     initIndexOverlay();
     initKeyboardNav();
@@ -71,67 +71,40 @@
      Over photographs (dark areas), it reads as warm lens glare.
      Over UI chrome, it disappears thanks to screen blending.
      ───────────────────────────────────────────────────────────────── */
-  function initCursorAndFlare() {
-    const cursor = document.getElementById('cursor');
-    const flare = document.getElementById('flare');
-    const label = document.getElementById('cursor-label');
-    if (!cursor || !flare) return;
+  function initHeroSlideshow() {
+    const reel = document.getElementById('hero-reel');
+    if (!reel) return;
+    const slides = Array.from(reel.querySelectorAll('.reel__slide'));
+    if (slides.length === 0) return;
 
-    // Position state (target vs current for lerping)
-    let mx = window.innerWidth / 2,  my = window.innerHeight / 2;
-    let cx = mx,                     cy = my;
-    let fx = mx,                     fy = my;
+    const currentEl = document.querySelector('[data-current-slide]');
+    const totalEl   = document.querySelector('[data-total-slides]');
+    const catEl     = document.querySelector('[data-current-cat]');
+    const progress  = document.getElementById('reel-progress');
 
-    window.addEventListener('mousemove', (e) => {
-      mx = e.clientX;
-      my = e.clientY;
-      if (flare.style.opacity === '' || !flare.classList.contains('is-on')) {
-        flare.classList.add('is-on');
+    const ROTATE_MS = 5500;
+    if (totalEl) totalEl.textContent = String(slides.length).padStart(2, '0');
+
+    let index = 0;
+    function update() {
+      slides.forEach((s, i) => s.classList.toggle('is-active', i === index));
+      if (currentEl) currentEl.textContent = String(index + 1).padStart(2, '0');
+      if (catEl) {
+        const cat = slides[index].getAttribute('data-cat');
+        if (cat) catEl.textContent = cat;
       }
-    }, { passive: true });
-
-    window.addEventListener('mouseleave', () => flare.classList.remove('is-on'));
-    window.addEventListener('blur', () => flare.classList.remove('is-on'));
-
-    // Lerp loop — separate speeds for the crisp ring (fast) and warm
-    // flare (slow, with momentum, like a real lens has weight)
-    function frame() {
-      cx += (mx - cx) * 0.18;
-      cy += (my - cy) * 0.18;
-      fx += (mx - fx) * 0.06;
-      fy += (my - fy) * 0.06;
-
-      cursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
-      flare.style.transform  = `translate(${fx}px, ${fy}px) translate(-50%, -50%)`;
-
-      requestAnimationFrame(frame);
+      if (progress) {
+        progress.classList.remove('is-running');
+        // Force reflow so the next class toggle re-runs the transition
+        void progress.offsetWidth;
+        progress.classList.add('is-running');
+      }
     }
-    requestAnimationFrame(frame);
-
-    // Hover/label states for interactive elements
-    const interactive = 'a, button, [data-zoom], .index-list__item, .cta';
-    document.addEventListener('mouseover', (e) => {
-      const t = e.target.closest(interactive);
-      if (!t) return;
-      cursor.classList.add('is-hover');
-      // Custom label?
-      let txt = '';
-      if (t.matches('[data-zoom]')) txt = 'View →';
-      else if (t.matches('.index-list__item')) txt = 'Enter →';
-      else if (t.matches('.cta')) txt = '';
-      if (txt) {
-        label.textContent = txt;
-        cursor.classList.add('is-label');
-      }
-    });
-    document.addEventListener('mouseout', (e) => {
-      const t = e.target.closest(interactive);
-      if (!t) return;
-      cursor.classList.remove('is-hover', 'is-label');
-    });
-
-    document.addEventListener('mousedown', () => cursor.classList.add('is-press'));
-    document.addEventListener('mouseup',   () => cursor.classList.remove('is-press'));
+    update();
+    setInterval(() => {
+      index = (index + 1) % slides.length;
+      update();
+    }, ROTATE_MS);
   }
 
   /* ─────────────────────────────────────────────────────────────────
@@ -384,13 +357,14 @@
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const data = new FormData(form);
-      const name    = (data.get('name')    || '').toString().trim();
-      const email   = (data.get('email')   || '').toString().trim();
-      const phone   = (data.get('phone')   || '').toString().trim();
-      const project = (data.get('project') || '').toString().trim();
-      const date    = (data.get('date')    || '').toString().trim();
-      const slot    = (data.get('slot')    || '').toString().trim();
-      const message = (data.get('message') || '').toString().trim();
+      const name     = (data.get('name')     || '').toString().trim();
+      const email    = (data.get('email')    || '').toString().trim();
+      const phone    = (data.get('phone')    || '').toString().trim();
+      const project  = (data.get('project')  || '').toString().trim();
+      const date     = (data.get('date')     || '').toString().trim();
+      const duration = (data.get('duration') || '').toString().trim();
+      const slot     = (data.get('slot')     || '').toString().trim();
+      const message  = (data.get('message')  || '').toString().trim();
 
       if (!name || !email) {
         setStatus('Please add your name and email.', 'error');
@@ -409,6 +383,7 @@
         'Phone:       ' + (phone || '—'),
         'Project:     ' + (project || '—'),
         'Date:        ' + (date || '—'),
+        'Duration:    ' + (duration || '—'),
         'Time slot:   ' + (slot || '—'),
         '',
         'Brief / message:',
